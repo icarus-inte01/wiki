@@ -42,6 +42,7 @@ nav:
     - life/index.md
   - 프로젝트:
     - projects/index.md
+    - 뉴스 수집기 설계: projects/design-news.md
 
 plugins:
   - search
