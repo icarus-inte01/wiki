@@ -1,0 +1,59 @@
+/* ===== 콘텐츠 영역 너비 확장 ===== */
+.md-grid {
+  max-width: 1440px;  /* 기본값 61rem(~976px) → 1440px로 확장 */
+}
+
+/* ===== 한글 가독성 향상 ===== */
+.md-typeset {
+  font-size: 14px;          /* Material 기본값 유지 */
+  line-height: 1.75;        /* 적당한 행간 */
+  letter-spacing: 0.01em;   /* 자간 미세 조정 */
+}
+
+/* ===== 내용 상단 여백 ===== */
+.md-content__inner {
+  padding-top: 1.6rem;
+}
+
+/* ===== 목록 가독성 ===== */
+.md-typeset ul,
+.md-typeset ol {
+  line-height: 1.7;
+}
+
+/* ===== 표 가독성 ===== */
+.md-typeset table:not([class]) {
+  font-size: 14px;
+}
+.md-typeset table:not([class]) th,
+.md-typeset table:not([class]) td {
+  padding: 0.35rem 0.6rem;  /* 셀 내부 여백 축소 */
+}
+.md-typeset table:not([class]) th {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* ===== 코드 블록 ===== */
+.md-typeset code {
+  font-size: 13px;
+}
+
+.md-typeset .highlighttable .linenos {
+  font-size: 13px;
+}
+
+/* ===== 이미지 반응형 처리 ===== */
+.md-typeset img,
+.md-typeset svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ===== 제목 간격 ===== */
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3 {
+  line-height: 1.4;
+  margin-top: 1.8em;
+}
