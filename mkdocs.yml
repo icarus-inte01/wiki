@@ -38,6 +38,7 @@ nav:
   - 개발:
     - dev/index.md
     - Mermaid 예제: dev/mermaid-example.md
+    - MCP 개념: dev/mcp.md
   - 일상/메모:
     - life/index.md
   - 프로젝트:
