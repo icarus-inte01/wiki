@@ -1,0 +1,1982 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="개인 기술 위키 — 개발, 일상, 프로젝트 노트">
+      
+      
+        <meta name="author" content="icarus">
+      
+      
+        <link rel="canonical" href="https://icarus-inte01.github.io/wiki/projects/design-news/">
+      
+      
+        <link rel="prev" href="../">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>뉴스 수집기 설계 - 개인 위키</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#design-newsmd" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href="../.." title="개인 위키" class="md-header__button md-logo" aria-label="개인 위키" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            개인 위키
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              뉴스 수집기 설계
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="라이트 모드로 전환"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="라이트 모드로 전환" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="다크 모드로 전환"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="다크 모드로 전환" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/icarus-inte01/wiki" title="저장소로 이동" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    icarus-inte01/wiki
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="탭" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  홈
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../dev/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  개발
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../life/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  일상/메모
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  프로젝트
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="개인 위키" class="md-nav__button md-logo" aria-label="개인 위키" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    개인 위키
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/icarus-inte01/wiki" title="저장소로 이동" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    icarus-inte01/wiki
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    홈
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../dev/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    개발
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    개발
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dev/mermaid-example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mermaid 예제
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../life/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    일상/메모
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    일상/메모
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    프로젝트
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    프로젝트
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    뉴스 수집기 설계
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    뉴스 수집기 설계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        개요
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-srcnewsmodelspy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 데이터 모델 — src/news/models.py
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-configyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 설정 — config.yaml
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-srcnewsfetcherpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 수집 레이어 — src/news/fetcher.py
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 수집 레이어 — src/news/fetcher.py">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        역할
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        주요 함수
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        의존성
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-cross-feed-scoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 선별 레이어 — 교차 피드 점수 (Cross-Feed Scoring)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 선별 레이어 — 교차 피드 점수 (Cross-Feed Scoring)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_proportional_selectarticles-n" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        알고리즘: _proportional_select(articles, n)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        중요성
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-llm-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. LLM 요약 레이어 — 3개 제공자
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. LLM 요약 레이어 — 3개 제공자">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        공통 인터페이스
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5a-groq-srcnewssummarizerpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5a. Groq 제공자 — src/news/summarizer.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5b-gemini-srcnewsgemini_summarizerpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5b. Gemini 제공자 — src/news/gemini_summarizer.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5c-zen-srcnewszen_summarizerpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5c. Zen 제공자 — src/news/zen_summarizer.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#llm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LLM 프롬프트 구조
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        번역 및 요약
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        후처리
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. 캐싱 레이어
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. 캐싱 레이어">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        동작 방식
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-cli-srcnewsclipy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. CLI 및 출력 레이어 — src/news/cli.py
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. CLI 및 출력 레이어 — src/news/cli.py">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        진입점
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        흐름
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        제공자 → 모듈 매핑
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. 전체 데이터 흐름 다이어그램
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. 주요 설계 결정
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. 개선 가능 사항
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        개요
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-srcnewsmodelspy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 데이터 모델 — src/news/models.py
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-configyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 설정 — config.yaml
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-srcnewsfetcherpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 수집 레이어 — src/news/fetcher.py
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 수집 레이어 — src/news/fetcher.py">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        역할
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        주요 함수
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        의존성
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-cross-feed-scoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 선별 레이어 — 교차 피드 점수 (Cross-Feed Scoring)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 선별 레이어 — 교차 피드 점수 (Cross-Feed Scoring)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_proportional_selectarticles-n" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        알고리즘: _proportional_select(articles, n)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        중요성
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-llm-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. LLM 요약 레이어 — 3개 제공자
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. LLM 요약 레이어 — 3개 제공자">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        공통 인터페이스
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5a-groq-srcnewssummarizerpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5a. Groq 제공자 — src/news/summarizer.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5b-gemini-srcnewsgemini_summarizerpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5b. Gemini 제공자 — src/news/gemini_summarizer.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5c-zen-srcnewszen_summarizerpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5c. Zen 제공자 — src/news/zen_summarizer.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#llm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LLM 프롬프트 구조
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        번역 및 요약
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        후처리
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. 캐싱 레이어
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. 캐싱 레이어">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        동작 방식
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-cli-srcnewsclipy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. CLI 및 출력 레이어 — src/news/cli.py
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. CLI 및 출력 레이어 — src/news/cli.py">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        진입점
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        흐름
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        제공자 → 모듈 매핑
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. 전체 데이터 흐름 다이어그램
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. 주요 설계 결정
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. 개선 가능 사항
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="design-newsmd">DESIGN-NEWS.md — 지역별 뉴스 수집 및 요약 시스템<a class="headerlink" href="#design-newsmd" title="Permanent link">&para;</a></h1>
+<h2 id="_1">개요<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>전 세계 7개 지역의 RSS 피드를 수집 → 중요한 기사 선별 → LLM으로 한국어 요약.</p>
+<pre class="mermaid"><code>flowchart LR
+    Config[config.yaml&lt;br/&gt;YAML 설정] --&gt; Fetcher[fetcher.py&lt;br/&gt;RSS/XML 수집]
+    Fetcher --&gt; Selector[교차 피드 점수&lt;br/&gt;_proportional_select]
+    Selector --&gt; LLM[LLM Provider&lt;br/&gt;Groq / Gemini / Zen]
+    LLM --&gt; Output[출력&lt;br/&gt;text / markdown]</code></pre>
+<hr />
+<h2 id="1-srcnewsmodelspy">1. 데이터 모델 — <code>src/news/models.py</code><a class="headerlink" href="#1-srcnewsmodelspy" title="Permanent link">&para;</a></h2>
+<p>모든 레이어에서 공유하는 핵심 데이터클래스:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nd">@dataclass</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">FeedConfig</span><span class="p">:</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">url</span><span class="p">:</span> <span class="nb">str</span>        <span class="c1"># RSS 피드 URL</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">source</span><span class="p">:</span> <span class="nb">str</span>     <span class="c1"># 표시 이름 (예: &quot;CNN&quot;, &quot;BBC&quot;)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nd">@dataclass</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="k">class</span><span class="w"> </span><span class="nc">RegionConfig</span><span class="p">:</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>               <span class="c1"># 사람이 읽을 수 있는 지역명</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">feeds</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">FeedConfig</span><span class="p">]</span> <span class="c1"># 지역당 1–3개 피드</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nd">@dataclass</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="k">class</span><span class="w"> </span><span class="nc">Article</span><span class="p">:</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span>          <span class="c1"># RSS 원본 제목</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">url</span><span class="p">:</span> <span class="nb">str</span>            <span class="c1"># 최선의 기사 URL</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>    <span class="c1"># RSS 요약/설명 (프롬프트에서 500자로 제한)</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="n">source_name</span><span class="p">:</span> <span class="nb">str</span>    <span class="c1"># 예: &quot;BBC Asia&quot;, &quot;SCMP&quot;</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="n">published</span><span class="p">:</span> <span class="nb">str</span>      <span class="c1"># ISO-8601 날짜 문자열</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="n">region</span><span class="p">:</span> <span class="nb">str</span>         <span class="c1"># 지역 키 (fetcher가 채움)</span>
+</code></pre></div>
+<p><strong>설계 노트:</strong>
+- <code>Article</code>은 Fetcher → Selector → LLM 프롬프트로 흐르며, 역직렬화되지는 않음
+- <code>FeedConfig</code> / <code>RegionConfig</code>는 설정 레이어에만 존재하며 Fetcher에서 소비됨</p>
+<hr />
+<h2 id="2-configyaml">2. 설정 — <code>config.yaml</code><a class="headerlink" href="#2-configyaml" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">regions</span><span class="p">:</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">north_america</span><span class="p">:</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;North</span><span class="nv"> </span><span class="s">America&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="nt">feeds</span><span class="p">:</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://rss.cnn.com/rss/cnn_topstories.rss&quot;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">        </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;CNN&quot;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://feeds.bbci.co.uk/news/world/us_and_canada/rss.xml&quot;</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">        </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;BBC&quot;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="nt">asia</span><span class="p">:</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Asia&quot;</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="nt">feeds</span><span class="p">:</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://www3.nhk.or.jp/rss/news/cat0.xml&quot;</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">        </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;NHK&quot;</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://www.scmp.com/rss/4/feed&quot;</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">        </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;SCMP&quot;</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">europe, middle_east, latin_america, africa, oceania</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+</code></pre></div>
+<p><code>fetcher._load_config()</code> 에 의해 로드 → <code>dict[str, RegionConfig]</code>.</p>
+<hr />
+<h2 id="3-srcnewsfetcherpy">3. 수집 레이어 — <code>src/news/fetcher.py</code><a class="headerlink" href="#3-srcnewsfetcherpy" title="Permanent link">&para;</a></h2>
+<h3 id="_2">역할<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li>YAML 설정 파싱</li>
+<li><code>feedparser</code>로 각 RSS 피드 수집</li>
+<li>제목, URL, 설명, 발행일 추출</li>
+<li><strong>지역 내</strong> URL 중복 제거</li>
+<li>RSS 피드 순서 유지 (편집자가 중요한 기사를 먼저 배치)</li>
+</ul>
+<h3 id="_3">주요 함수<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">fetch_all_articles</span><span class="p">(</span><span class="n">config_path</span><span class="o">=</span><span class="s2">&quot;config.yaml&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">Article</span><span class="p">]]</span>
+</code></pre></div>
+<p>모든 지역을 순회하며 각 피드에 대해:
+1. <code>_fetch_feed(feed_cfg)</code> → <code>feedparser.parse(url)</code> → <code>Article</code> 리스트
+   - URL 추출 우선순위: <code>links[alternate/html]</code> &gt; <code>id</code>/<code>guid</code> &gt; <code>link</code> 폴백
+   - 날짜 추출: <code>published_parsed</code> &gt; <code>updated_parsed</code> → ISO-8601
+2. 지역 내 URL 기준 중복 제거 (첫 번째 항목 우선)
+3. 결과: <code>{"asia": [Article, ...], "europe": [...], ...}</code></p>
+<h3 id="_4">의존성<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>feedparser</code> — RSS/Atom XML 파서</li>
+<li><code>pyyaml</code> — 설정 로더</li>
+</ul>
+<hr />
+<h2 id="4-cross-feed-scoring">4. 선별 레이어 — 교차 피드 점수 (Cross-Feed Scoring)<a class="headerlink" href="#4-cross-feed-scoring" title="Permanent link">&para;</a></h2>
+<p>세 summarizer 모듈에 동일하게 내장되어 있음. 별도 파일 없음.</p>
+<h3 id="_proportional_selectarticles-n">알고리즘: <code>_proportional_select(articles, n)</code><a class="headerlink" href="#_proportional_selectarticles-n" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>목표: 여러 피드에서 비례적으로 n개 기사를 선별하되,
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>      여러 소스에서 보도된 기사에 가중치 부여.
+</code></pre></div>
+<p><strong>1단계: <code>source_name</code>으로 그룹화</strong></p>
+<pre class="mermaid"><code>flowchart LR
+    subgraph CNN["CNN"]
+        A1[A1] --&gt; A2[A2] --&gt; A3[A3]
+    end
+    subgraph BBC["BBC"]
+        B1[B1] --&gt; B2[B2] --&gt; B3[B3]
+    end
+    subgraph Guardian["The Guardian"]
+        G1[G1] --&gt; G2[G2] --&gt; G3[G3]
+    end</code></pre>
+<p><strong>2단계: <code>_cross_feed_score()</code>로 그룹 내 점수 계산</strong>
+- 각 기사에 대해 <strong>다른 피드</strong>에서 유사한 제목의 기사를 얼마나 많이 가져왔는지 카운트
+- 유사도 기준: <code>_word_jaccard()</code> &gt; 0.35
+- 3개 피드에서 보도된 기사 → 점수 2, 1개 피드만 보도 → 점수 0</p>
+<p><strong>3단계: 각 그룹 내에서 점수 내림차순 정렬</strong></p>
+<p><strong>4단계: 슬롯 분배</strong></p>
+<pre class="mermaid"><code>flowchart LR
+    N[n = 전체 슬롯 수] --&gt; Divide[per_feed = n // len&amp;#40;그룹 수&amp;#41;&lt;br/&gt;remainder = n % len&amp;#40;그룹 수&amp;#41;]
+    Divide --&gt; CNN_take["CNN: per_feed + 1"]
+    Divide --&gt; BBC_take["BBC: per_feed + 1"]
+    Divide --&gt; G_take["Guardian: per_feed"]
+    CNN_take --&gt; Selected["선정된 기사"]
+    BBC_take --&gt; Selected
+    G_take --&gt; Selected</code></pre>
+<h3 id="_5">중요성<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<ul>
+<li>여러 소스에서 보도된 속보가 우선 선정됨</li>
+<li>지역/틈새 기사도 피드별 할당 슬롯으로 대표성 확보</li>
+<li>단일 피드가 50개 기사를 가져와도 다른 피드를 압도하지 않음</li>
+</ul>
+<hr />
+<h2 id="5-llm-3">5. LLM 요약 레이어 — 3개 제공자<a class="headerlink" href="#5-llm-3" title="Permanent link">&para;</a></h2>
+<h3 id="_6">공통 인터페이스<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<p>모든 summarizer 모듈은 세 가지 함수를 노출:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">summarize_all</span><span class="p">(</span><span class="n">articles_by_region</span><span class="p">,</span> <span class="n">region_names</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">max_articles</span><span class="p">)</span> <span class="err">→</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">summarize_region</span><span class="p">(</span><span class="n">region_key</span><span class="p">,</span> <span class="n">region_name</span><span class="p">,</span> <span class="n">articles</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">max_articles</span><span class="p">)</span> <span class="err">→</span> <span class="nb">dict</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">emoji_for</span><span class="p">(</span><span class="n">region_key</span><span class="p">)</span> <span class="err">→</span> <span class="nb">str</span>
+</code></pre></div>
+<p>반환 구조:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="s2">&quot;region&quot;</span><span class="p">:</span> <span class="s2">&quot;asia&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="s2">&quot;region_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Asia&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="s2">&quot;articles&quot;</span><span class="p">:</span> <span class="p">[</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>        <span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;한국어 제목&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">,</span> <span class="s2">&quot;one_liner&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">,</span> <span class="s2">&quot;significance&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>        <span class="o">...</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="p">],</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="kc">None</span> <span class="o">|</span> <span class="nb">str</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="p">}</span>
+</code></pre></div></p>
+<h3 id="5a-groq-srcnewssummarizerpy">5a. Groq 제공자 — <code>src/news/summarizer.py</code><a class="headerlink" href="#5a-groq-srcnewssummarizerpy" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>상세</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>API</td>
+<td><code>groq</code> Python SDK → <code>client.chat.completions.create()</code></td>
+</tr>
+<tr>
+<td>환경변수</td>
+<td><code>GROQ_API_KEY</code></td>
+</tr>
+<tr>
+<td>기본 모델</td>
+<td><code>llama-3.3-70b-versatile</code></td>
+</tr>
+<tr>
+<td>무료 모델</td>
+<td><code>llama-3.3-70b-instruct</code>, <code>llama-4-maverick-17b-128e-instruct-fp8</code>, <code>llama-4-scout-17b-16e-instruct-fp8</code></td>
+</tr>
+<tr>
+<td>속도 제한</td>
+<td>재시도 없음 — 429 발생 시 에러 반환</td>
+</tr>
+<tr>
+<td>캐시</td>
+<td><code>.cache/summaries.json</code></td>
+</tr>
+<tr>
+<td>특징</td>
+<td><code>response_format={"type": "json_object"}</code> (네이티브 구조화 출력)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="5b-gemini-srcnewsgemini_summarizerpy">5b. Gemini 제공자 — <code>src/news/gemini_summarizer.py</code><a class="headerlink" href="#5b-gemini-srcnewsgemini_summarizerpy" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>상세</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>API</td>
+<td><code>google-genai</code> Python SDK → <code>client.models.generate_content()</code></td>
+</tr>
+<tr>
+<td>환경변수</td>
+<td><code>GEMINI_API_KEY</code> 또는 <code>GOOGLE_API_KEY</code></td>
+</tr>
+<tr>
+<td>기본 모델</td>
+<td><code>gemini-2.5-flash-lite</code></td>
+</tr>
+<tr>
+<td>속도 제한</td>
+<td>15s/30s/45s 백오프로 3회 재시도</td>
+</tr>
+<tr>
+<td>캐시</td>
+<td><code>.cache/summaries_gemini.json</code></td>
+</tr>
+<tr>
+<td>특징</td>
+<td><code>response_mime_type="application/json"</code> (네이티브 구조화 출력)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="5c-zen-srcnewszen_summarizerpy">5c. Zen 제공자 — <code>src/news/zen_summarizer.py</code><a class="headerlink" href="#5c-zen-srcnewszen_summarizerpy" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>상세</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>API</td>
+<td>Raw <code>requests</code> → <code>https://opencode.ai/zen/v1/chat/completions</code></td>
+</tr>
+<tr>
+<td>환경변수</td>
+<td><code>OPENCODE_API_KEY</code></td>
+</tr>
+<tr>
+<td>기본 모델</td>
+<td><code>big-pickle</code></td>
+</tr>
+<tr>
+<td>무료 모델</td>
+<td><code>deepseek-v4-flash-free</code>, <code>kimi-k2.5-free</code>, <code>qwen3.6-plus-free</code>, <code>glm-4.7-free</code>, <code>mimo-v2-flash-free</code> 외 15+</td>
+</tr>
+<tr>
+<td>속도 제한</td>
+<td>10s/20s/30s 백오프로 3회 재시도 (429/5xx 발생 시)</td>
+</tr>
+<tr>
+<td>캐시</td>
+<td><code>.cache/summaries_zen.json</code></td>
+</tr>
+<tr>
+<td>특징</td>
+<td>OpenAI 호환 엔드포인트, 가장 다양한 무료 모델 선택지</td>
+</tr>
+</tbody>
+</table>
+<h3 id="llm">LLM 프롬프트 구조<a class="headerlink" href="#llm" title="Permanent link">&para;</a></h3>
+<p><strong>시스템 프롬프트</strong> (3개 제공자 모두 동일):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>역할: 한국어 뉴스 요약 비서
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>작업: 5개 중요 기사 선정 → 각각:
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  1. 한국어 제목 (번역 필수 — 원어 유지 금지)
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  2. 한국어 요약 (4-5문장, 누가/무엇을/언제/어디서/왜 포함)
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  3. 입력받은 URL
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>  4. 한국어 중요도 설명 (2-3문장)
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>엄격 규칙: 모든 출력은 한국어. 일본어, 중국어, 포르투갈어 등 금지.
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>응답 형식: JSON — {&quot;articles&quot;: [{&quot;title&quot;, &quot;url&quot;, &quot;one_liner&quot;, &quot;significance&quot;}]}
+</code></pre></div>
+<p><strong>사용자 프롬프트</strong> (지역별 구성):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Region: {name}
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Total articles available: {n}
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>[1] Title: ...
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    Source: ...
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    Description: ...
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>[2] ...
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>...
+</code></pre></div>
+<p>각 설명은 500자로 제한. 모델은 지역당 약 30개 기사를 수신.</p>
+<h3 id="_7">번역 및 요약<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<p>번역과 요약은 <strong>단일 LLM 호출</strong>로 처리 — 별도의 번역 단계 없음. 프롬프트가 모델에 지시:
+1. 영어/일본어/중국어 등으로 된 기사 읽기
+2. 제목을 <strong>한국어로 번역</strong>
+3. 내용을 <strong>한국어로 요약</strong>
+4. 한국어 JSON으로 출력</p>
+<p>이는 <strong>번역-후-요약</strong> 방식을 한 번에 처리하는 방식으로, 2단계 파이프라인과 대조됨.</p>
+<h3 id="_8">후처리<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>JSON 파싱</strong>: <code>json.loads()</code> 시도 → 실패 시 정규식 <code>{...}</code> 추출 → 실패 시 에러 반환</li>
+<li><strong>URL 복구</strong>: 출력된 제목을 정규화된 제목 조회를 통해 원본 URL과 매칭</li>
+</ol>
+<hr />
+<h2 id="6">6. 캐싱 레이어<a class="headerlink" href="#6" title="Permanent link">&para;</a></h2>
+<h3 id="_9">동작 방식<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart LR
+    RK[region_key] --&gt; Concat[+ 문자열 결합]
+    MN[model_name] --&gt; Concat
+    AT[전체 기사 제목] --&gt; Concat
+    AU[전체 기사 URL] --&gt; Concat
+    Concat --&gt; SHA[SHA256 해시]
+    SHA --&gt; Key["캐시 키"]</code></pre>
+<table>
+<thead>
+<tr>
+<th>제공자</th>
+<th>캐시 파일</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Groq</td>
+<td><code>.cache/summaries.json</code></td>
+</tr>
+<tr>
+<td>Gemini</td>
+<td><code>.cache/summaries_gemini.json</code></td>
+</tr>
+<tr>
+<td>Zen</td>
+<td><code>.cache/summaries_zen.json</code></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>최초 실행 → API 호출 → 캐시 저장</li>
+<li>재실행 (동일 기사 + 모델) → 캐시 히트 → API 호출 없음</li>
+<li>캐시는 실행 간 유지됨 (디스크의 JSON 파일)</li>
+</ul>
+<hr />
+<h2 id="7-cli-srcnewsclipy">7. CLI 및 출력 레이어 — <code>src/news/cli.py</code><a class="headerlink" href="#7-cli-srcnewsclipy" title="Permanent link">&para;</a></h2>
+<h3 id="_10">진입점<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>python<span class="w"> </span>main.py<span class="w"> </span><span class="o">[</span>--provider<span class="w"> </span>groq<span class="p">|</span>gemini<span class="p">|</span>zen<span class="o">]</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">               </span><span class="o">[</span>--model<span class="w"> </span>&lt;model-name&gt;<span class="o">]</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">               </span><span class="o">[</span>--regions<span class="w"> </span>asia,europe<span class="o">]</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">               </span><span class="o">[</span>--limit<span class="w"> </span><span class="m">30</span><span class="o">]</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">               </span><span class="o">[</span>--output<span class="w"> </span>text<span class="p">|</span>markdown<span class="o">]</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">               </span><span class="o">[</span>--config<span class="w"> </span>config.yaml<span class="o">]</span>
+</code></pre></div>
+<h3 id="_11">흐름<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart TB
+    A[CLI 인자 파싱&lt;br/&gt;--provider --model --regions --limit --output] --&gt; B{Provider 선택?}
+    B --&gt;|groq| C1[summarizer.py 로드&lt;br/&gt;Groq SDK]
+    B --&gt;|gemini| C2[gemini_summarizer.py 로드&lt;br/&gt;google-genai SDK]
+    B --&gt;|zen| C3[zen_summarizer.py 로드&lt;br/&gt;requests → opencode.ai]
+    C1 --&gt; D[Provider별 기본 모델 설정]
+    C2 --&gt; D
+    C3 --&gt; D
+    D --&gt; E[fetcher.fetch_all_articles]
+    E --&gt; F[--regions 필터링]
+    F --&gt; G[summarizer.summarize_all&lt;br/&gt;model=... max_articles=...]
+    G --&gt; H{에러?}
+    H --&gt;|Yes| I[속도 제한?]
+    I --&gt;|Yes| J["출력: ⏳ API 토큰 한도 초과"]
+    I --&gt;|No| K["출력: 요약 생성 실패 - {error}"]
+    H --&gt;|No| L[결과 출력&lt;br/&gt;text / markdown]</code></pre>
+<h3 id="_12">제공자 → 모듈 매핑<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th><code>--provider</code></th>
+<th>모듈</th>
+<th>기본 모델</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>groq</code></td>
+<td><code>summarizer</code> (groq SDK)</td>
+<td><code>llama-3.3-70b-versatile</code></td>
+</tr>
+<tr>
+<td><code>gemini</code></td>
+<td><code>gemini_summarizer</code></td>
+<td><code>gemini-2.5-flash-lite</code></td>
+</tr>
+<tr>
+<td><code>zen</code></td>
+<td><code>zen_summarizer</code> (requests)</td>
+<td><code>big-pickle</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="8">8. 전체 데이터 흐름 다이어그램<a class="headerlink" href="#8" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TB
+    Conf[config.yaml&lt;br/&gt;7개 지역, 15개 RSS 피드] --&gt; Fetcher
+
+    subgraph Fetcher[수집 레이어 - fetcher.py]
+        Load[_load_config 설정 로드] --&gt; Fetch[_fetch_feed × N 피드 수집]
+        Fetch --&gt; Dedup[지역 내 URL 중복 제거]
+    end
+
+    Fetcher --&gt; Dict["dict[region_key, list[Article]]"]
+
+    subgraph Selector[선별 레이어 - 교차 피드 점수]
+        Prop[_proportional_select 비례 선정] --&gt; Score[_cross_feed_score 교차 점수]
+        Score --&gt; Jac[_word_jaccard &gt; 0.35 유사도]
+    end
+
+    Dict --&gt; Selector
+
+    Selector --&gt; Providers{내장 Provider}
+
+    subgraph Groq[Groq 제공자]
+        GSumm[summarizer.py] --&gt; GAPI[Groq API&lt;br/&gt;groq SDK]
+    end
+
+    subgraph Gemini[Gemini 제공자]
+        BeSumm[gemini_summarizer.py] --&gt; BeAPI[Gemini API&lt;br/&gt;google-genai SDK]
+    end
+
+    subgraph Zen[Zen 제공자]
+        ZeSumm[zen_summarizer.py] --&gt; ZeAPI[OpenCode Zen API&lt;br/&gt;requests → opencode.ai]
+    end
+
+    Providers --&gt;|groq| Groq
+    Providers --&gt;|gemini| Gemini
+    Providers --&gt;|zen| Zen
+
+    GAPI &amp; BeAPI &amp; ZeAPI --&gt; Prompt
+
+    subgraph Prompt[LLM 프롬프트]
+        SP[시스템 프롬프트&lt;br/&gt;한국어 요약 + JSON 출력] --&gt; UP[사용자 프롬프트&lt;br/&gt;지역별 기사 목록]
+    end
+
+    Prompt --&gt; LLM[LLM 응답 생성&lt;br/&gt;번역된 제목 + 한국어 요약]
+
+    LLM --&gt; Parse{JSON 파싱}
+
+    Parse --&gt;|json.loads 성공| Unpack[기사 데이터 언패킹]
+    Parse --&gt;|json.loads 실패| Regex["정규식 폴백 {…}"]
+    Regex --&gt;|성공| Unpack
+    Regex --&gt;|실패| Error["에러 반환&lt;br/&gt;'Failed to parse model response'"]
+
+    Unpack --&gt; URL[URL 복구&lt;br/&gt;제목 → 원본 URL 매칭]
+    URL --&gt; Cache[Provider 캐시 저장&lt;br/&gt;SHA256 키]
+    Cache --&gt; Output
+
+    subgraph Output[출력 레이어 - cli.py]
+        Text[text 포맷&lt;br/&gt;_print_text]
+        Markdown[markdown 포맷&lt;br/&gt;_print_markdown]
+    end
+
+    Output --&gt; Done["🇰🇷 World News Digest"]</code></pre>
+<hr />
+<h2 id="9">9. 주요 설계 결정<a class="headerlink" href="#9" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>결정</th>
+<th>근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Pluggable providers</strong></td>
+<td>파이프라인 코드 변경 없이 AI 백엔드 전환 가능. 동일한 <code>summarize_region()</code> 인터페이스.</td>
+</tr>
+<tr>
+<td><strong>교차 피드 점수</strong></td>
+<td>단일 피드 독점 방지. 여러 소스 보도 속보가 상위 선정됨.</td>
+</tr>
+<tr>
+<td><strong>단일 호출 번역 + 요약</strong></td>
+<td>2단계 파이프라인보다 단순. 단일 컨텍스트 윈도우, 단일 API 호출, 지연 시간 감소.</td>
+</tr>
+<tr>
+<td><strong>Provider별 캐시</strong></td>
+<td>동일 기사 + 다른 모델 → 다른 캐시 키. 교차 오염 없음.</td>
+</tr>
+<tr>
+<td><strong>JSON 구조화 출력</strong></td>
+<td>일관된 파싱 가능 출력 강제. 정규식 폴백으로 복원력 확보.</td>
+</tr>
+<tr>
+<td><strong>RSS 순서 유지 (날짜 정렬 안 함)</strong></td>
+<td>RSS 피드는 중요한 기사를 먼저 배치. 편집자 순서가 알고리즘 정렬보다 우선.</td>
+</tr>
+<tr>
+<td><strong>설명 500자 제한</strong></td>
+<td>더 많은 기사를 컨텍스트 윈도우에 포함 (30개 기사 × ~500자 ≈ 15K 토큰).</td>
+</tr>
+<tr>
+<td><strong>지역별 LLM 호출</strong></td>
+<td>각 지역이 독립적인 컨텍스트를 가짐. 지역 간 혼동 방지.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="10">10. 개선 가능 사항<a class="headerlink" href="#10" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>2단계 파이프라인</strong>: 번역 단계를 요약과 분리. 단계별로 다른 모델 사용 가능.</li>
+<li><strong>비동기 API 호출</strong>: 순차 처리 대신 지역별 병렬 처리 (현재 지역 간 3초 쿨다운).</li>
+<li><strong>지역별 프롬프트 설정</strong>: 지역마다 다른 길이 요구사항 설정 가능.</li>
+<li><strong>폴백 체인</strong>: 기본 Provider 실패 시 자동으로 보조 Provider 재시도.</li>
+<li><strong>스트리밍 출력</strong>: 각 지역 완료 시점에 바로 출력 (UX 개선).</li>
+<li><strong>프롬프트 압축</strong>: LLM 전송 전 기사를 사전 요약하여 더 긴 컨텍스트 처리.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  맨위로
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      CC BY-NC 4.0
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/icarus-inte01" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.indexes", "navigation.top", "search.highlight", "search.suggest", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

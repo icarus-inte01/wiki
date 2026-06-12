@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://icarus-inte01.github.io/wiki/</loc>
+         <lastmod>2026-06-12</lastmod>
+    </url>
+    <url>
+         <loc>https://icarus-inte01.github.io/wiki/dev/</loc>
+         <lastmod>2026-06-12</lastmod>
+    </url>
+    <url>
+         <loc>https://icarus-inte01.github.io/wiki/dev/mermaid-example/</loc>
+         <lastmod>2026-06-12</lastmod>
+    </url>
+    <url>
+         <loc>https://icarus-inte01.github.io/wiki/life/</loc>
+         <lastmod>2026-06-12</lastmod>
+    </url>
+    <url>
+         <loc>https://icarus-inte01.github.io/wiki/projects/</loc>
+         <lastmod>2026-06-12</lastmod>
+    </url>
+    <url>
+         <loc>https://icarus-inte01.github.io/wiki/projects/design-news/</loc>
+         <lastmod>2026-06-12</lastmod>
+    </url>
+</urlset>
