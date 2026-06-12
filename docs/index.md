@@ -10,6 +10,7 @@
 
 ## 최근 추가
 
+- **MCP 개념** — `docs/dev/mcp.md` 추가 (2026-06-13)
 - `mkdocs.yml` MkDocs + Material 설정
 
 ---
