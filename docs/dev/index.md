@@ -10,7 +10,10 @@
 
 ## 언어/프레임워크
 
-- ...
+### Python
+
+- **[Python venv — 개념과 공유/분리 전략](python/venv.md)** — 가상 환경 개념과 프로젝트별 venv 관리 전략
+- **[pip와 Python 패키지 개념 정리](python/pip.md)** — pip install, editable install, site-packages 동작 원리
 
 ## 도구
 
