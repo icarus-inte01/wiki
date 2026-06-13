@@ -53,3 +53,56 @@
 ```
 
 **삭제**: `docs/dev/old-tool.md` 삭제 → `docs/dev/index.md`에서 `- **[Old Tool](old-tool.md)** — ...` 항목 제거
+
+---
+
+## mkdocs.yml 네비게이션 관리 규칙
+
+> **새 `.md` 파일이 추가/삭제/이동될 때마다 `mkdocs.yml`의 `nav` 섹션도 함께 갱신해야 합니다.**
+
+`mkdocs.yml`은 GitHub Pages 사이트의 왼쪽 패널 네비게이션을 정의합니다. `docs/` 내부 파일 구조 변경 시 `nav`도 동기화해야 합니다.
+
+### 추가 규칙
+
+1. `docs/` 아래에 새 `.md` 파일이 생성되면 `mkdocs.yml`의 `nav`에 해당 파일이 속한 섹션 아래에 항목을 추가합니다.
+
+2. 추가 형식:
+   ```yaml
+       - 문서 제목: path/to/file.md
+   ```
+   (4-space indent, 섹션 아래에 배치)
+
+3. 섹션 판별: 파일 경로의 디렉터리를 기준으로 기존 `nav`에서 같은 디렉터리의 파일들이 속한 섹션을 찾아 추가합니다. 예:
+   - `projects/wiki-mcp.md` → `프로젝트` 섹션 아래
+   - `dev/python/pip.md` → `개발 > Python` 하위 섹션 아래
+
+4. 문서의 제목은 `.md` 파일의 첫 번째 `# ` 헤딩을 사용합니다.
+
+5. 이미 nav에 등록된 파일은 중복 추가하지 않습니다.
+
+### 삭제 규칙
+
+1. `docs/` 아래에서 `.md` 파일이 삭제되면 `mkdocs.yml`의 `nav`에서 해당 파일의 항목을 제거합니다.
+
+2. 제거 대상 식별: `파일명.md` 패턴으로 nav 항목을 찾아 제거합니다. 같은 패턴이 여러 개 있을 경우 전체 경로(`path/to/file.md`)로 정확히 매칭합니다.
+
+### 이동 규칙
+
+1. `docs/` 아래에서 `.md` 파일이 이동되면 `mkdocs.yml`의 `nav`를 다음과 같이 갱신합니다:
+   - 원본 경로 항목 제거
+   - 대상 경로 항목을 대상 디렉터리에 맞는 섹션 아래에 추가
+
+2. 파일명이 변경되지 않았다면 기존 제목을 재사용하고, 변경되었거나 대상 경로에서 다시 읽을 수 있으면 새 `# ` 헤딩을 사용합니다.
+
+### 적용 예시
+
+**추가**: `projects/wiki-mcp.md` 생성 → `nav`의 `프로젝트` 섹션 아래에 추가:
+
+```yaml
+  - 프로젝트:
+    - projects/index.md
+    - 뉴스 수집기 설계: projects/design-news.md
+    - Wiki MCP Server: projects/wiki-mcp.md     # ← 추가
+```
+
+**삭제**: `dev/old-tool.md` 삭제 → `nav`에서 해당 줄 제거
