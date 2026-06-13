@@ -4,6 +4,8 @@
 
 전 세계 7개 지역의 RSS 피드를 수집 → 중요한 기사 선별 → LLM으로 한국어 요약.
 
+- **저장소**: [github.com/icarus-inte01/sandbox](https://github.com/icarus-inte01/sandbox) — `news/` 디렉터리
+
 ```mermaid
 flowchart LR
     Config[config.yaml<br/>YAML 설정] --> Fetcher[fetcher.py<br/>RSS/XML 수집]
