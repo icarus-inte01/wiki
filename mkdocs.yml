@@ -46,7 +46,7 @@ nav:
     - life/index.md
   - 프로젝트:
     - projects/index.md
-    - 뉴스 수집기 설계: projects/design-news.md
+    - 뉴스 수집 및 요약 시스템: projects/design-news.md
     - KIS Stock API: projects/stock-api.md
     - Wiki MCP Server: projects/wiki-mcp.md
 

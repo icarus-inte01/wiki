@@ -1,4 +1,4 @@
-# DESIGN-NEWS.md — 지역별 뉴스 수집 및 요약 시스템
+# 뉴스 수집 및 요약 시스템 — Design Document
 
 ## 개요
 
