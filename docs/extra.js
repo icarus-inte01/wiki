@@ -248,7 +248,8 @@
   // Material의 bundle.js가 DOM을 변조하기 때문에, fetch로 원본 HTML을 다시 받아서
   // <pre class="mermaid-diagram"><code>의 내용을 추출한다.
   function fetchMermaidSources() {
-    return fetch(window.location.href)
+    // cache-busting: CDN edge가 다른 버전을 제공할 수 있음
+    return fetch(window.location.href + "?t=" + Date.now())
       .then(function (r) { return r.text(); })
       .then(function (html) {
         var parser = new DOMParser();
