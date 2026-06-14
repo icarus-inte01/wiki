@@ -281,5 +281,7 @@
 
 [data-md-color-scheme="slate"] .mermaid-top-toolbar,
 [data-md-color-scheme="slate"] .mermaid-bottom-toolbar {
+  background: rgba(255, 255, 255, 0.10);
   border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
