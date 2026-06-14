@@ -21,6 +21,16 @@
       '<svg viewBox="0 0 24 24" width="18" height="18"><path d="M12 5c-3.87 0-7 3.13-7 7h2c0-2.76 2.24-5 5-5s5 2.24 5 5-2.24 5-5 5c-1.13 0-2.16-.37-3-1.01V16h-2v-5h5v2h-1.79c.77.61 1.71 1 2.79 1 2.48 0 4.5-2.02 4.5-4.5S14.48 5 12 5z" fill="currentColor"/></svg>',
     close:
       '<svg viewBox="0 0 24 24" width="28" height="28"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="currentColor"/></svg>',
+    copy:
+      '<svg viewBox="0 0 24 24" width="18" height="18"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" fill="currentColor"/></svg>',
+    "pan-up":
+      '<svg viewBox="0 0 24 24" width="18" height="18"><path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z" fill="currentColor"/></svg>',
+    "pan-down":
+      '<svg viewBox="0 0 24 24" width="18" height="18"><path d="M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z" fill="currentColor"/></svg>',
+    "pan-left":
+      '<svg viewBox="0 0 24 24" width="18" height="18"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" fill="currentColor"/></svg>',
+    "pan-right":
+      '<svg viewBox="0 0 24 24" width="18" height="18"><path d="M4 11h12.17l-5.59-5.59L12 4l8 8-8 8-1.41-1.41L16.17 13H4v-2z" fill="currentColor"/></svg>',
   };
 
   // --- 상태 ---
@@ -183,33 +193,6 @@
     document.body.style.overflow = "";
   }
 
-  // --- Mermaid 소스 추출 (fetch로 원본 HTML에서 추출) ---
-  // Material의 bundle.js가 DOM을 변조하기 때문에, fetch로 원본 HTML을 다시 받아서
-  // <pre class="mermaid-diagram"><code>의 내용을 추출한다.
-  function fetchMermaidSources() {
-    // cache-busting: CDN edge가 다른 버전을 제공할 수 있음
-    return fetch(window.location.href + "?t=" + Date.now())
-      .then(function (r) { return r.text(); })
-      .then(function (html) {
-        var parser = new DOMParser();
-        var doc = parser.parseFromString(html, "text/html");
-        var codes = doc.querySelectorAll("pre.mermaid-diagram code, pre.mermaid code");
-        var sources = [];
-        codes.forEach(function (code) {
-          sources.push(code.textContent || "");
-        });
-        return sources;
-      })
-      .catch(function () {
-        // fetch 실패 시 fallback: 현재 DOM에서 시도
-        var sources = [];
-        document.querySelectorAll("div.mermaid").forEach(function (div) {
-          if (div.textContent.trim()) sources.push(div.textContent);
-        });
-        return sources;
-      });
-  }
-
   // --- Mermaid 11.4.1 동적 로드 ---
   function loadMermaidVersion(callback) {
     if (typeof mermaid !== "undefined" && mermaid.version && mermaid.version.indexOf("11.4") >= 0) {
@@ -225,99 +208,141 @@
     document.head.appendChild(script);
   }
 
-  // --- fetch로 얻은 소스로 <div class="mermaid"> 생성 후 Mermaid 실행 ---
+  // --- <pre class="mermaid-diagram">를 제자리에서 SVG+툴바로 교체 ---
   function setupAndRender() {
-    fetchMermaidSources().then(function (sources) {
-      if (!sources || sources.length === 0) return;
+    // DOM에 있는 <pre class="mermaid-diagram"> 수집
+    var pres = document.querySelectorAll("pre.mermaid-diagram");
+    if (!pres.length) return;
 
-      // Material이 만든 모든 기존 <div class="mermaid"> 제거
-      document.querySelectorAll("div.mermaid").forEach(function (el) {
-        el.remove();
-      });
+    // Material이 만든 기존 <div class="mermaid"> 제거 (우리가 새로 그림)
+    document.querySelectorAll("div.mermaid").forEach(function (el) {
+      el.remove();
+    });
 
-      // Mermaid 실행 (개별 render로 DOM 제어)
-      loadMermaidVersion(function () {
-        mermaid.initialize({ startOnLoad: false });
-        var contentArea = document.querySelector(".md-content__inner") || document.querySelector("article") || document.body;
-        var promises = [];
+    loadMermaidVersion(function () {
+      mermaid.initialize({ startOnLoad: false });
+      var pending = [];
 
-        sources.forEach(function (source, i) {
-          var p = mermaid.render("mermaid-svg-" + i, source)
-            .then(function (result) {
-              var wrapper = document.createElement("div");
-              wrapper.className = "mermaid";
-              wrapper.innerHTML = result.svg;
-              contentArea.appendChild(wrapper);
-              if (result.bindFunctions) result.bindFunctions(wrapper);
+      pres.forEach(function (pre, i) {
+        var code = pre.querySelector("code");
+        if (!code) return;
+        var source = code.textContent || "";
+        if (!source.trim()) return;
 
-              // toolbar는 innerHTML 이후에 별도 삽입
-              var tbHtml = toolbarHtml({
-                "zoom-in": ICONS["zoom-in"],
-                "zoom-out": ICONS["zoom-out"],
-                reset: ICONS["reset"],
-                fullscreen: ICONS["fullscreen"],
-              });
-              wrapper.insertAdjacentHTML("beforeend", tbHtml);
+        var p = mermaid.render("mermaid-svg-" + i, source)
+          .then(function (result) {
+            var wrapper = document.createElement("div");
+            wrapper.className = "mermaid mermaid-enhanced";
 
-              // attach overlay events to the new wrapper
-              attachToolbarEvents(wrapper);
-              return wrapper;
-            })
-            .catch(function (err) {
-              console.warn("mermaid render error for div " + i + ":", err);
-            });
-          promises.push(p);
-        });
+            // top toolbar: fullscreen + copy
+            var topHtml = '<div class="mermaid-top-toolbar">' +
+              '<button class="mermaid-tb-btn" data-action="fullscreen" title="전체화면">' + ICONS["fullscreen"] + '</button>' +
+              '<button class="mermaid-tb-btn" data-action="copy" title="SVG 복사">' + ICONS["copy"] + '</button>' +
+              '</div>';
 
-        Promise.all(promises).then(function () {
-          // all toolbars are already in the DOM from .then() above
-        });
+            // bottom toolbar: pan + reset + zoom
+            var bottomHtml = '<div class="mermaid-bottom-toolbar">' +
+              '<button class="mermaid-tb-btn" data-action="pan-up" title="위로">' + ICONS["pan-up"] + '</button>' +
+              '<button class="mermaid-tb-btn" data-action="pan-left" title="왼쪽으로">' + ICONS["pan-left"] + '</button>' +
+              '<button class="mermaid-tb-btn" data-action="reset" title="원래 위치">' + ICONS["reset"] + '</button>' +
+              '<button class="mermaid-tb-btn" data-action="pan-right" title="오른쪽으로">' + ICONS["pan-right"] + '</button>' +
+              '<button class="mermaid-tb-btn" data-action="pan-down" title="아래로">' + ICONS["pan-down"] + '</button>' +
+              '<span class="mermaid-tb-sep"></span>' +
+              '<button class="mermaid-tb-btn" data-action="zoom-out" title="축소">' + ICONS["zoom-out"] + '</button>' +
+              '<button class="mermaid-tb-btn" data-action="zoom-in" title="확대">' + ICONS["zoom-in"] + '</button>' +
+              '</div>';
+
+            wrapper.innerHTML = result.svg + topHtml + bottomHtml;
+            pre.insertAdjacentElement("afterend", wrapper);
+            pre.style.display = "none";
+            if (result.bindFunctions) result.bindFunctions(wrapper);
+            attachToolbarEvents(wrapper);
+          })
+          .catch(function (err) {
+            console.warn("mermaid render error for diagram " + i + ":", err);
+          });
+        pending.push(p);
       });
     });
   }
 
-  // --- 툴바 HTML 생성 ---
-  function toolbarHtml(icons) {
-    var html = '<div class="mermaid-diagram-toolbar">' +
-      '<button class="mermaid-tb-btn" data-action="zoom-in" title="확대">' + icons["zoom-in"] + '</button>' +
-      '<button class="mermaid-tb-btn" data-action="zoom-out" title="축소">' + icons["zoom-out"] + '</button>' +
-      '<button class="mermaid-tb-btn" data-action="reset" title="원래 크기">' + icons["reset"] + '</button>' +
-      '<button class="mermaid-tb-btn" data-action="fullscreen" title="전체화면">' + icons["fullscreen"] + '</button>' +
-      "</div>";
-    return html;
-  }
-
-  // --- 툴바 이벤트 연결 ---
+  // --- 툴바 이벤트 연결 (하나의 핸들러로 모든 버튼 처리) ---
   function attachToolbarEvents(container) {
-    var toolbar = container.querySelector(".mermaid-diagram-toolbar");
-    if (!toolbar) return;
-    toolbar.addEventListener("click", function (e) {
+    container.addEventListener("click", function (e) {
       var btn = e.target.closest(".mermaid-tb-btn");
       if (!btn) return;
-      var s = container.querySelector("svg");
-      if (!s) return;
+
+      var svg = container.querySelector("svg");
+      if (!svg && btn.dataset.action !== "copy") return;
+
       switch (btn.dataset.action) {
         case "zoom-in": {
-          var w = parseFloat(s.getAttribute("width") || s.viewBox.baseVal.width);
-          s.style.width = w * 1.3 + "px";
-          s.style.maxWidth = "none";
+          var w = parseFloat(svg.getAttribute("width") || svg.viewBox.baseVal.width);
+          svg.style.width = w * 1.3 + "px";
+          svg.style.maxWidth = "none";
           break;
         }
         case "zoom-out": {
-          var w2 = parseFloat(s.style.width || s.getAttribute("width") || s.viewBox.baseVal.width);
-          s.style.width = Math.max(w2 / 1.3, 200) + "px";
-          s.style.maxWidth = "none";
+          var w2 = parseFloat(svg.style.width || svg.getAttribute("width") || svg.viewBox.baseVal.width);
+          svg.style.width = Math.max(w2 / 1.3, 200) + "px";
+          svg.style.maxWidth = "none";
           break;
         }
         case "reset":
-          s.style.width = "";
-          s.style.maxWidth = "";
+          svg.style.width = "";
+          svg.style.maxWidth = "";
+          svg.style.transform = "";
+          delete container.dataset.panX;
+          delete container.dataset.panY;
           break;
         case "fullscreen":
-          openOverlay(s);
+          openOverlay(svg);
+          break;
+        case "copy":
+          copySvg(container);
+          break;
+        case "pan-up":
+        case "pan-down":
+        case "pan-left":
+        case "pan-right":
+          panSvg(svg, btn.dataset.action);
           break;
       }
     });
+  }
+
+  // --- SVG 복사 ---
+  function copySvg(container) {
+    var svg = container.querySelector("svg");
+    if (!svg) return;
+    var html = svg.outerHTML;
+    navigator.clipboard.writeText(html).catch(function () {
+      // fallback
+      var ta = document.createElement("textarea");
+      ta.value = html;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+    });
+  }
+
+  // --- SVG 패닝 (transform 이동, 컨테이너별 독립 상태) ---
+  function panSvg(svg, direction) {
+    var container = svg.closest(".mermaid") || svg.parentElement;
+    var px = parseInt(container.dataset.panX) || 0;
+    var py = parseInt(container.dataset.panY) || 0;
+    var step = 30;
+    switch (direction) {
+      case "pan-up": py += step; break;
+      case "pan-down": py -= step; break;
+      case "pan-left": px += step; break;
+      case "pan-right": px -= step; break;
+    }
+    container.dataset.panX = px;
+    container.dataset.panY = py;
+    svg.style.transform = "translate(" + px + "px, " + py + "px)";
+    svg.style.transformOrigin = "top left";
   }
 
   // --- 초기화: 한 번만 실행 ---
