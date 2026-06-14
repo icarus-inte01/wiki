@@ -262,7 +262,7 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-[data-md-color-scheme="slate"] .mermaid-enhanced svg {
+[data-md-color-scheme="slate"] .mermaid-enhanced > svg {
   filter: invert(1) hue-rotate(180deg) brightness(1.3) saturate(1.4);
 }
 
