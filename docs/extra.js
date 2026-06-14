@@ -244,23 +244,52 @@
     });
   }
 
+  // Mermaid 렌더링이 아직 안 되었으면 직접 실행
+  function ensureMermaidRendered() {
+    var mermaidDivs = document.querySelectorAll(".mermaid");
+    var needsRender = false;
+    mermaidDivs.forEach(function (el) {
+      if (!el.querySelector("svg")) needsRender = true;
+    });
+    if (!needsRender) return true;
+
+    if (typeof mermaid !== "undefined" && mermaid.run) {
+      try {
+        mermaid.run({ querySelector: ".mermaid" });
+        return true;
+      } catch (e) {
+        console.warn("mermaid.run() failed:", e);
+        return false;
+      }
+    }
+    return false;
+  }
+
   // Mermaid 렌더링 완료를 기다리며 반복 시도
   function waitForMermaid() {
-    var maxAttempts = 20;  // 최대 10초
+    var maxAttempts = 20;
     var attempt = 0;
 
     function poll() {
       attempt++;
+
+      // 아직 SVG가 없으면 Mermaid 직접 초기화
+      if (attempt === 1) {
+        ensureMermaidRendered();
+      }
+
       enhanceMermaidDiagrams();
 
-      // 모든 .mermaid 요소가 처리되었으면 중단
-      var remaining = document.querySelectorAll(".mermaid:not(.mermaid-enhanced)").length;
+      var remaining = document.querySelectorAll(
+        ".mermaid:not(.mermaid-enhanced)"
+      ).length;
       if (remaining === 0 || attempt >= maxAttempts) return;
 
       setTimeout(poll, 500);
     }
 
-    setTimeout(poll, 500);
+    // 첫 폴링은 mermaid.js가 로드될 시간을 충분히 줌
+    setTimeout(poll, 1000);
   }
 
   if (document.readyState === "loading") {
@@ -271,11 +300,20 @@
 
   // 테마 토글 등으로 Mermaid가 다시 그려질 때 재처리
   var observer = new MutationObserver(function () {
-    var needsEnhance = document.querySelectorAll(
+    var needsRender = document.querySelectorAll(
       ".mermaid:not(.mermaid-enhanced) svg"
     ).length > 0;
-    if (needsEnhance) {
-      enhanceMermaidDiagrams();
+
+    var emptyMermaids = document.querySelectorAll(
+      ".mermaid:not(.mermaid-enhanced)"
+    ).length > 0;
+
+    if (emptyMermaids) {
+      ensureMermaidRendered();
+    }
+
+    if (needsRender || emptyMermaids) {
+      setTimeout(enhanceMermaidDiagrams, 500);
     }
   });
   observer.observe(document.body, { childList: true, subtree: true });
