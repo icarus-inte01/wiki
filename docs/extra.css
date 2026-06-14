@@ -251,3 +251,14 @@
     border-radius: 0;
   }
 }
+
+/* ===== Mermaid 다이어그램 다크모드 대응 ===== */
+/* Mermaid SVG는 light 모드 색상(검정 선/글자, 흰 배경)으로 고정 렌더링됨.
+   slate 테마에서 invert(1) hue-rotate(180deg)로 색상을 반전시켜 가시성 확보. */
+[data-md-color-scheme="slate"] .mermaid-enhanced svg {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+[data-md-color-scheme="slate"] .mermaid-overlay-svg svg {
+  filter: invert(1) hue-rotate(180deg);
+}

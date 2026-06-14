@@ -80,7 +80,7 @@ markdown_extensions:
       permalink: true
 
 extra_css:
-  - extra.css?v=2
+  - extra.css?v=3
 
 extra_javascript:
   - extra.js?v=8
