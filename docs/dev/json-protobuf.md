@@ -46,6 +46,7 @@ Protobuf (바이너리):  ~21 bytes  (약 60% 더 작음)
   "tags": ["admin", "user"]
 }
 ```
+
 - 스키마가 없으면 타입을 **추론**해야 함 — `42`가 숫자인지 문자열인지 불분명
 - 선택 필드 유무를 런타임에 체크해야 함
 - IDE 자동완성/정적 분석 지원 어려움
@@ -58,6 +59,7 @@ message User {
   repeated string tags = 3;
 }
 ```
+
 - 필드 번호(1, 2, 3)로 태깅 → 바이너리에서 키를 숫자로 참조
 - **required / optional / repeated** 명확
 - **enum, oneof, map, any** 등 풍부한 타입
@@ -158,13 +160,6 @@ graph TB
     S3 <-->|gRPC 스트리밍| KAFKA
     S1 <-->|gRPC| S2
     S2 <-->|gRPC| S3
-
-    style CLIENT fill:#e1f5fe,stroke:#0288d1
-    style GW fill:#e8f5e9,stroke:#388e3c
-    style S1 fill:#fff3e0,stroke:#f57c00
-    style S2 fill:#fff3e0,stroke:#f57c00
-    style S3 fill:#fff3e0,stroke:#f57c00
-    style KAFKA fill:#f3e5f5,stroke:#7b1fa2
 ```
 
 ---
@@ -184,11 +179,6 @@ flowchart TD
     DECISION4 -->|아니오| DECISION5{"강타입 코드 생성 +<br/>스트리밍이<br/>필요한가?"}
     DECISION5 -->|예| GRPC1
     DECISION5 -->|아니오| JSON2["✅ JSON (REST)"]
-
-    style JSON1 fill:#e1f5fe,stroke:#0288d1
-    style JSON2 fill:#e1f5fe,stroke:#0288d1
-    style GRPC1 fill:#fff3e0,stroke:#f57c00
-    style START fill:#f5f5f5,stroke:#616161
 ```
 
 ---
