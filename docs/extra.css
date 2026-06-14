@@ -64,11 +64,12 @@
   overflow: visible;
 }
 
-/* ----- 상단 툴바 (hover 시 표시) ----- */
+/* ----- 상단 툴바 (hover 시 표시, 그림 위쪽 중앙) ----- */
 .mermaid-top-toolbar {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   gap: 2px;
   padding: 4px 6px;
@@ -87,10 +88,10 @@
   pointer-events: auto;
 }
 
-/* ----- 하단 툴바 (hover 시 표시) ----- */
+/* ----- 하단 툴바 (hover 시 표시, 그림 아래쪽 중앙) ----- */
 .mermaid-bottom-toolbar {
   position: absolute;
-  bottom: 8px;
+  bottom: -40px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;

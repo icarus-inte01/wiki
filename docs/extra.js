@@ -277,23 +277,26 @@
 
       switch (btn.dataset.action) {
         case "zoom-in": {
-          var w = svg.getBoundingClientRect().width;
-          svg.style.width = w * ZOOM_STEP + "px";
+          var z = parseFloat(container.dataset.zoomLevel) || 1;
+          container.dataset.zoomLevel = Math.min(z * ZOOM_STEP, ZOOM_MAX);
           svg.style.maxWidth = "none";
+          applyTransform(svg, container);
           break;
         }
         case "zoom-out": {
-          var w2 = svg.getBoundingClientRect().width;
-          svg.style.width = Math.max(w2 / ZOOM_STEP, 200) + "px";
+          var z2 = parseFloat(container.dataset.zoomLevel) || 1;
+          container.dataset.zoomLevel = Math.max(z2 / ZOOM_STEP, ZOOM_MIN);
           svg.style.maxWidth = "none";
+          applyTransform(svg, container);
           break;
         }
         case "reset":
           svg.style.width = "";
           svg.style.maxWidth = "";
-          svg.style.transform = "";
+          delete container.dataset.zoomLevel;
           delete container.dataset.panX;
           delete container.dataset.panY;
+          svg.style.transform = "";
           break;
         case "fullscreen":
           openOverlay(svg);
@@ -305,7 +308,7 @@
         case "pan-down":
         case "pan-left":
         case "pan-right":
-          panSvg(svg, btn.dataset.action);
+          panSvg(svg, container, btn.dataset.action);
           break;
       }
     });
@@ -327,9 +330,17 @@
     });
   }
 
-  // --- SVG 패닝 (transform 이동, 컨테이너별 독립 상태) ---
-  function panSvg(svg, direction) {
-    var container = svg.closest(".mermaid") || svg.parentElement;
+  // --- SVG 변환 (줌 + 패닝 통합, 컨테이너별 독립 상태, 가운데 기준) ---
+  function applyTransform(svg, container) {
+    var zoom = parseFloat(container.dataset.zoomLevel) || 1;
+    var px = parseInt(container.dataset.panX) || 0;
+    var py = parseInt(container.dataset.panY) || 0;
+    svg.style.transform =
+      "translate(" + px + "px, " + py + "px) scale(" + zoom + ")";
+    svg.style.transformOrigin = "center center";
+  }
+
+  function panSvg(svg, container, direction) {
     var px = parseInt(container.dataset.panX) || 0;
     var py = parseInt(container.dataset.panY) || 0;
     var step = 30;
@@ -341,8 +352,7 @@
     }
     container.dataset.panX = px;
     container.dataset.panY = py;
-    svg.style.transform = "translate(" + px + "px, " + py + "px)";
-    svg.style.transformOrigin = "top left";
+    applyTransform(svg, container);
   }
 
   // --- 초기화: 한 번만 실행 ---
