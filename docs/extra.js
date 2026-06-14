@@ -246,14 +246,18 @@
             .then(function (result) {
               var wrapper = document.createElement("div");
               wrapper.className = "mermaid";
-              wrapper.innerHTML = result.svg + toolbarHtml({
+              wrapper.innerHTML = result.svg;
+              contentArea.appendChild(wrapper);
+              if (result.bindFunctions) result.bindFunctions(wrapper);
+
+              // toolbar는 innerHTML 이후에 별도 삽입
+              var tbHtml = toolbarHtml({
                 "zoom-in": ICONS["zoom-in"],
                 "zoom-out": ICONS["zoom-out"],
                 reset: ICONS["reset"],
                 fullscreen: ICONS["fullscreen"],
               });
-              contentArea.appendChild(wrapper);
-              if (result.bindFunctions) result.bindFunctions(wrapper);
+              wrapper.insertAdjacentHTML("beforeend", tbHtml);
 
               // attach overlay events to the new wrapper
               attachToolbarEvents(wrapper);
