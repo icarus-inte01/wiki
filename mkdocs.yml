@@ -39,6 +39,7 @@ nav:
     - dev/index.md
     - Mermaid 예제: dev/mermaid-example.md
     - MCP 개념: dev/mcp.md
+    - JSON vs Protobuf 비교 분석: dev/json-protobuf.md
     - Python:
       - Python venv: dev/python/venv.md
       - pip 패키지: dev/python/pip.md
