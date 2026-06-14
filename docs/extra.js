@@ -291,42 +291,41 @@
     fetchMermaidSources().then(function (sources) {
       if (!sources || sources.length === 0) return;
 
-      // Material이 만든 모든 기존 <div class="mermaid"> 제거 (빈 것 + 에러)
+      // Material이 만든 모든 기존 <div class="mermaid"> 제거
       document.querySelectorAll("div.mermaid").forEach(function (el) {
         el.remove();
       });
 
       // 소스로 <div class="mermaid"> 생성
       var contentArea = document.querySelector(".md-content__inner") || document.querySelector("article") || document.body;
+      var mermaidDivs = [];
       sources.forEach(function (source) {
         var div = document.createElement("div");
         div.className = "mermaid";
         div.textContent = source;
         contentArea.appendChild(div);
+        mermaidDivs.push(div);
       });
 
-      // Mermaid 실행
+      // Mermaid 실행 (개별 render로 DOM 제어)
       loadMermaidVersion(function () {
         mermaid.initialize({ startOnLoad: false });
-        mermaid
-          .run({ querySelector: ".mermaid" })
-          .then(function () {
-            // 작은 지연 후 툴바 부착 (SVG가 실제로 DOM에 추가된 후에)
-            setTimeout(enhanceMermaidDiagrams, 50);
-          })
-          .catch(function (err) {
-            console.warn("mermaid 11.4.1 run error:", err);
-            // fallback: 각 div를 개별 렌더링
-            sources.forEach(function (source, i) {
-              var divs = document.querySelectorAll("div.mermaid");
-              if (divs[i]) {
-                mermaid.mermaidAPI.render("mermaid-svg-" + i, source, function (svg) {
-                  divs[i].innerHTML = svg;
-                  setTimeout(enhanceMermaidDiagrams, 50);
-                });
-              }
+        var promises = [];
+        mermaidDivs.forEach(function (div, i) {
+          var source = div.textContent;
+          var p = mermaid.render("mermaid-svg-" + i, source)
+            .then(function (result) {
+              div.innerHTML = result.svg;
+              if (result.bindFunctions) result.bindFunctions(div);
+            })
+            .catch(function (err) {
+              console.warn("mermaid render error for div " + i + ":", err);
             });
-          });
+          promises.push(p);
+        });
+        Promise.all(promises).then(function () {
+          enhanceMermaidDiagrams();
+        });
       });
     });
   }
