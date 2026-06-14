@@ -10,7 +10,7 @@
 
 - **[Mermaid 다이어그램 예제](mermaid-example.md)** — Mermaid 문법별 사용 예시 모음
 
-- **[WiKi Update 내용 요약](guide-wiki-update.md)**
+- **[WiKi Update 내용 요약](wiki-update.md)**
 
 ## 언어/프레임워크
 
