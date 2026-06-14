@@ -186,8 +186,12 @@
   // --- 각 Mermaid 다이어그램에 툴바 추가 ---
   function enhanceMermaidDiagrams() {
     document.querySelectorAll(".mermaid").forEach(function (el) {
-      // 이미 enhancement 적용됨
       if (el.classList.contains("mermaid-enhanced")) return;
+
+      // SVG가 아직 렌더링되지 않았으면 건너뜀
+      var svg = el.querySelector("svg");
+      if (!svg) return;
+
       el.classList.add("mermaid-enhanced");
 
       // 툴바 컨테이너
@@ -208,52 +212,71 @@
         "</button>";
       el.appendChild(toolbar);
 
-      // 인라인 줌/리셋
-      var svg = el.querySelector("svg");
+      // 인라인 줌/리셋 (클릭 시점에 SVG를 다시 조회)
       toolbar.addEventListener("click", function (e) {
         var btn = e.target.closest(".mermaid-tb-btn");
-        if (!btn || !svg) return;
+        if (!btn) return;
+        var s = el.querySelector("svg");
+        if (!s) return;
+
         switch (btn.dataset.action) {
           case "zoom-in": {
-            var w = parseFloat(svg.getAttribute("width") || svg.viewBox.baseVal.width);
-            svg.style.width = w * 1.3 + "px";
-            svg.style.maxWidth = "none";
+            var w = parseFloat(s.getAttribute("width") || s.viewBox.baseVal.width);
+            s.style.width = w * 1.3 + "px";
+            s.style.maxWidth = "none";
             break;
           }
           case "zoom-out": {
-            var w2 = parseFloat(svg.style.width || svg.getAttribute("width") || svg.viewBox.baseVal.width);
-            svg.style.width = Math.max(w2 / 1.3, 200) + "px";
-            svg.style.maxWidth = "none";
+            var w2 = parseFloat(s.style.width || s.getAttribute("width") || s.viewBox.baseVal.width);
+            s.style.width = Math.max(w2 / 1.3, 200) + "px";
+            s.style.maxWidth = "none";
             break;
           }
           case "reset":
-            svg.style.width = "";
-            svg.style.maxWidth = "";
+            s.style.width = "";
+            s.style.maxWidth = "";
             break;
           case "fullscreen":
-            if (svg) openOverlay(svg);
+            openOverlay(s);
             break;
         }
       });
     });
   }
 
-  // DOM이 준비되면 실행 + Mermaid가 렌더링할 시간을 줌
-  function run() {
-    enhanceMermaidDiagrams();
+  // Mermaid 렌더링 완료를 기다리며 반복 시도
+  function waitForMermaid() {
+    var maxAttempts = 20;  // 최대 10초
+    var attempt = 0;
+
+    function poll() {
+      attempt++;
+      enhanceMermaidDiagrams();
+
+      // 모든 .mermaid 요소가 처리되었으면 중단
+      var remaining = document.querySelectorAll(".mermaid:not(.mermaid-enhanced)").length;
+      if (remaining === 0 || attempt >= maxAttempts) return;
+
+      setTimeout(poll, 500);
+    }
+
+    setTimeout(poll, 500);
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", function () {
-      setTimeout(run, 600);
-    });
+    document.addEventListener("DOMContentLoaded", waitForMermaid);
   } else {
-    setTimeout(run, 600);
+    waitForMermaid();
   }
 
-  // 테마 토글 등으로 Mermaid가 다시 그려질 때 감지
+  // 테마 토글 등으로 Mermaid가 다시 그려질 때 재처리
   var observer = new MutationObserver(function () {
-    setTimeout(run, 300);
+    var needsEnhance = document.querySelectorAll(
+      ".mermaid:not(.mermaid-enhanced) svg"
+    ).length > 0;
+    if (needsEnhance) {
+      enhanceMermaidDiagrams();
+    }
   });
   observer.observe(document.body, { childList: true, subtree: true });
 })();
