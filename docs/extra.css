@@ -58,10 +58,14 @@
   margin-top: 1.8em;
 }
 
-/* ===== Mermaid 다이어그램 툴바 ===== */
+/* ===== Mermaid 다이어그램 컨테이너 ===== */
 .mermaid {
   position: relative;
   overflow: visible;
+}
+
+.mermaid-enhanced {
+  text-align: center;
 }
 
 /* ----- 상단 툴바 (hover 시 표시, 그림 위쪽 중앙) ----- */

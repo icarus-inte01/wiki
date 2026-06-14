@@ -252,7 +252,9 @@
               '<button class="mermaid-tb-btn" data-action="zoom-in" title="확대">' + ICONS["zoom-in"] + '</button>' +
               '</div>';
 
-            wrapper.innerHTML = result.svg + topHtml + bottomHtml;
+            // Mermaid가 넣은 width="100%" 제거 → viewBox 기준 자연 크기 유지
+            var svgClean = result.svg.replace(/\s(width|height)="[^"]*"/gi, '');
+            wrapper.innerHTML = svgClean + topHtml + bottomHtml;
             pre.insertAdjacentElement("afterend", wrapper);
             pre.style.display = "none";
             if (result.bindFunctions) result.bindFunctions(wrapper);
