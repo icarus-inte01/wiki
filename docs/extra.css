@@ -57,3 +57,154 @@
   line-height: 1.4;
   margin-top: 1.8em;
 }
+
+/* ===== Mermaid 다이어그램 툴바 ===== */
+.mermaid {
+  position: relative;
+  overflow: visible;
+}
+
+.mermaid-enhanced .mermaid-diagram-toolbar {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  gap: 2px;
+  padding: 4px 6px;
+  background: var(--md-default-bg-color, #fff);
+  border: 1px solid var(--md-default-fg-color--lightest, #ddd);
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  z-index: 2;
+}
+
+.mermaid-enhanced:hover .mermaid-diagram-toolbar {
+  opacity: 1;
+}
+
+.mermaid-tb-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--md-default-fg-color, #333);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.mermaid-tb-btn:hover {
+  background: var(--md-default-fg-color--lightest, #eee);
+}
+
+.mermaid-tb-btn:active {
+  background: var(--md-default-fg-color--lighter, #ccc);
+}
+
+/* ===== Mermaid 전체화면 오버레이 ===== */
+.mermaid-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+}
+
+.mermaid-overlay.active {
+  display: block;
+}
+
+.mermaid-overlay-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2px);
+}
+
+.mermaid-overlay-container {
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  right: 40px;
+  bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  background: var(--md-default-bg-color, #fff);
+  border-radius: 12px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+  overflow: hidden;
+}
+
+.mermaid-overlay-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--md-default-fg-color--lightest, #ddd);
+  background: var(--md-default-bg-color, #fff);
+}
+
+.mermaid-overlay-zoom-label {
+  font-size: 13px;
+  font-family: var(--md-text-font-family, sans-serif);
+  color: var(--md-default-fg-color--light, #666);
+  min-width: 48px;
+  margin-right: auto;
+}
+
+.mermaid-tb-btn--close {
+  margin-left: auto;
+  width: 36px;
+  height: 36px;
+}
+
+.mermaid-overlay-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  cursor: grab;
+  background: var(--md-code-bg-color, #f8f8f8);
+}
+
+.mermaid-overlay-body:active {
+  cursor: grabbing;
+}
+
+.mermaid-overlay-svg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+}
+
+.mermaid-overlay-svg svg {
+  max-width: 100%;
+  max-height: 100%;
+  transition: transform 0.05s ease;
+}
+
+/* 모바일 대응 */
+@media (max-width: 768px) {
+  .mermaid-overlay-container {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 0;
+  }
+}
