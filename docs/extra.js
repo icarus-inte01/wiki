@@ -320,19 +320,26 @@
     });
   }
 
-  // --- 초기화: DOMContentLoaded 후 fetch 기반 렌더링 ---
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", setupAndRender);
-  } else {
+  // --- 초기화: 한 번만 실행 ---
+  var rendered = false;
+  function init() {
+    if (rendered) return;
+    rendered = true;
     setupAndRender();
   }
 
-  // 테마 토글 등으로 Mermaid가 다시 그려질 때 재처리
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+
+  // MutationObserver: Mermaid가 지연 렌더링된 SVGs에 툴바 추가 (safety net)
   var observer = new MutationObserver(function () {
-    var needsEnhance = document.querySelectorAll(
+    var pending = document.querySelectorAll(
       ".mermaid:not(.mermaid-enhanced) svg"
-    ).length > 0;
-    if (needsEnhance) {
+    ).length;
+    if (pending > 0) {
       enhanceMermaidDiagrams();
     }
   });
