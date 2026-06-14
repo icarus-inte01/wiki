@@ -253,7 +253,9 @@
               '</div>';
 
             // Mermaid가 넣은 width="100%" 제거 → viewBox 기준 자연 크기 유지
-            var svgClean = result.svg.replace(/\s(width|height)="[^"]*"/gi, '');
+            var svgClean = result.svg.replace(/<svg\s[^>]*>/i, function (tag) {
+              return tag.replace(/\s(width|height)="[^"]*"/gi, '');
+            });
             wrapper.innerHTML = svgClean + topHtml + bottomHtml;
             pre.insertAdjacentElement("afterend", wrapper);
             pre.style.display = "none";
@@ -281,20 +283,16 @@
         case "zoom-in": {
           var z = parseFloat(container.dataset.zoomLevel) || 1;
           container.dataset.zoomLevel = Math.min(z * ZOOM_STEP, ZOOM_MAX);
-          svg.style.maxWidth = "none";
           applyContainerTransform(svg, container);
           break;
         }
         case "zoom-out": {
           var z2 = parseFloat(container.dataset.zoomLevel) || 1;
           container.dataset.zoomLevel = Math.max(z2 / ZOOM_STEP, ZOOM_MIN);
-          svg.style.maxWidth = "none";
           applyContainerTransform(svg, container);
           break;
         }
         case "reset":
-          svg.style.width = "";
-          svg.style.maxWidth = "";
           delete container.dataset.zoomLevel;
           delete container.dataset.panX;
           delete container.dataset.panY;
