@@ -244,16 +244,30 @@
     });
   }
 
-  // --- Mermaid 소스 찾기 (<pre class="mermaid-diagram"><code>에서 원본 확보) ---
-  // Material 테마는 class="mermaid-diagram"을 인식하지 못하므로
-  // 변환하지 않고 원본 그대로 남겨둠 (빌드 시점 class 명 변경)
-  function findMermaidSources() {
-    var pres = document.querySelectorAll("pre.mermaid-diagram code");
-    var sources = [];
-    pres.forEach(function (code) {
-      sources.push(code.textContent || "");
-    });
-    return sources;
+  // --- Mermaid 소스 추출 (fetch로 원본 HTML에서 추출) ---
+  // Material의 bundle.js가 DOM을 변조하기 때문에, fetch로 원본 HTML을 다시 받아서
+  // <pre class="mermaid-diagram"><code>의 내용을 추출한다.
+  function fetchMermaidSources() {
+    return fetch(window.location.href)
+      .then(function (r) { return r.text(); })
+      .then(function (html) {
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(html, "text/html");
+        var codes = doc.querySelectorAll("pre.mermaid-diagram code, pre.mermaid code");
+        var sources = [];
+        codes.forEach(function (code) {
+          sources.push(code.textContent || "");
+        });
+        return sources;
+      })
+      .catch(function () {
+        // fetch 실패 시 fallback: 현재 DOM에서 시도
+        var sources = [];
+        document.querySelectorAll("div.mermaid").forEach(function (div) {
+          if (div.textContent.trim()) sources.push(div.textContent);
+        });
+        return sources;
+      });
   }
 
   // --- Mermaid 11.4.1 동적 로드 ---
@@ -271,77 +285,45 @@
     document.head.appendChild(script);
   }
 
-  // --- <pre class="mermaid-diagram"> → <div class="mermaid"> 변환 후 Mermaid 실행 ---
+  // --- fetch로 얻은 소스로 <div class="mermaid"> 생성 후 Mermaid 실행 ---
   function setupAndRender() {
-    var sources = findMermaidSources();
-    if (sources.length === 0) {
-      return; // 이 페이지에는 Mermaid 다이어그램 없음
-    }
+    fetchMermaidSources().then(function (sources) {
+      if (!sources || sources.length === 0) return;
 
-    // 기존에 Material이 만든 빈 <div class="mermaid"> 제거
-    document.querySelectorAll("div.mermaid").forEach(function (el) {
-      el.remove();
-    });
+      // 기존에 Material이 만든 빈 <div class="mermaid"> 제거
+      document.querySelectorAll("div.mermaid").forEach(function (el) {
+        el.remove();
+      });
 
-    // 소스로 <div class="mermaid"> 생성
-    var contentArea = document.querySelector(".md-content__inner") || document.querySelector("article") || document.body;
-    sources.forEach(function (source) {
-      var div = document.createElement("div");
-      div.className = "mermaid";
-      div.textContent = source;
-      // 각 <pre class="mermaid-diagram"> 자리에 배치
-      var pre = contentArea.querySelector("pre.mermaid-diagram");
-      if (pre) {
-        pre.parentNode.insertBefore(div, pre.nextSibling);
-      } else {
+      // 소스로 <div class="mermaid"> 생성
+      var contentArea = document.querySelector(".md-content__inner") || document.querySelector("article") || document.body;
+      sources.forEach(function (source) {
+        var div = document.createElement("div");
+        div.className = "mermaid";
+        div.textContent = source;
         contentArea.appendChild(div);
-      }
-    });
+      });
 
-    // material이 만든 mermaid css가 남아있다면 복사 (테마 대응)
-    // Mermaid 실행
-    loadMermaidVersion(function () {
-      mermaid.initialize({ startOnLoad: false });
-      mermaid
-        .run({ querySelector: ".mermaid" })
-        .then(function () {
-          enhanceMermaidDiagrams();
-        })
-        .catch(function (err) {
-          console.warn("mermaid 11.4.1 error:", err);
-        });
-    });
-  }
-
-  // --- 5. 전체 초기화 ---
-  function initMermaid() {
-    // 페이지에 mermaid-diagram이 없는 경우 Material이 만든 .mermaid가 있을 수 있음
-    var hasPre = document.querySelectorAll("pre.mermaid-diagram").length > 0;
-    var hasDivMermaid = document.querySelectorAll("div.mermaid").length > 0;
-
-    if (hasPre) {
-      setupAndRender(); // 우리가 직접 처리 (class rename 방식)
-    } else if (hasDivMermaid) {
-      // Material이 처리한 기존 .mermaid가 있음 (이전 빌드 호환)
-      // 소스가 없으면 스킵
-      var firstDiv = document.querySelector("div.mermaid");
-      if (firstDiv && !firstDiv.textContent.trim()) {
-        // 소스가 없음 → 복구 불가, 스킵
-        return;
-      }
+      // Mermaid 실행
       loadMermaidVersion(function () {
         mermaid.initialize({ startOnLoad: false });
-        mermaid.run({ querySelector: ".mermaid" }).then(function () {
-          enhanceMermaidDiagrams();
-        });
+        mermaid
+          .run({ querySelector: ".mermaid" })
+          .then(function () {
+            enhanceMermaidDiagrams();
+          })
+          .catch(function (err) {
+            console.warn("mermaid 11.4.1 error:", err);
+          });
       });
-    }
+    });
   }
 
+  // --- 초기화: DOMContentLoaded 후 fetch 기반 렌더링 ---
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initMermaid);
+    document.addEventListener("DOMContentLoaded", setupAndRender);
   } else {
-    initMermaid();
+    setupAndRender();
   }
 
   // 테마 토글 등으로 Mermaid가 다시 그려질 때 재처리
