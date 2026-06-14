@@ -90,5 +90,8 @@ extra:
     - icon: fontawesome/brands/github
       link: https://github.com/icarus-inte01
   generator: false
+  mermaid:
+    theme: default
+    version: "11.4.1"
 
 copyright: CC BY-NC 4.0

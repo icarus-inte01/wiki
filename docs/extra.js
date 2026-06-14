@@ -244,28 +244,6 @@
     });
   }
 
-  // --- Mermaid 로드 및 초기화 ---
-  function loadMermaid(callback) {
-    if (typeof mermaid !== "undefined" && mermaid.run) {
-      callback();
-      return;
-    }
-
-    // Mermaid 설정: auto-init 비활성화 (Material 변환 이후 우리가 직접 실행)
-    window.mermaidConfig = { startOnLoad: false };
-
-    var script = document.createElement("script");
-    script.src = "https://unpkg.com/mermaid@11/dist/mermaid.min.js";
-    script.onload = callback;
-    script.onerror = function () {
-      console.warn("Mermaid CDN 로드 실패, 2초 후 재시도");
-      setTimeout(function () {
-        loadMermaid(callback);
-      }, 2000);
-    };
-    document.head.appendChild(script);
-  }
-
   // Mermaid 렌더링 완료를 기다리며 반복 시도
   function waitForMermaid() {
     var maxAttempts = 40;
@@ -273,50 +251,14 @@
 
     function poll() {
       attempt++;
+      enhanceMermaidDiagrams();
 
-      // Material 테마가 <pre class="mermaid"><code>를
-      // <div class="mermaid">source</div>로 변환했는지 확인
-      var mermaidDivs = document.querySelectorAll("div.mermaid");
-      var hasDiagrams = mermaidDivs.length > 0;
+      var allEnhanced = document.querySelectorAll(
+        ".mermaid:not(.mermaid-enhanced)"
+      ).length === 0;
+      if (allEnhanced || attempt >= maxAttempts) return;
 
-      if (!hasDiagrams) {
-        // 아직 Material 변환 전이면 나중에 재시도
-        if (attempt < maxAttempts) {
-          setTimeout(poll, 500);
-        }
-        return;
-      }
-
-      // SVG가 이미 렌더링된 경우 (Material이 이미 처리)
-      var existingSvg = document.querySelectorAll(".mermaid svg").length;
-      if (existingSvg > 0) {
-        enhanceMermaidDiagrams();
-        return;
-      }
-
-      // Mermaid 로드 후 실행
-      loadMermaid(function () {
-        mermaid.initialize({ startOnLoad: false });
-
-        // Material이 만든 <div class="mermaid">에 source가 있는지 확인
-        var firstDiv = document.querySelector("div.mermaid");
-        if (firstDiv && !firstDiv.textContent.trim()) {
-          // source가 없으면 <pre><code>에서 다시 읽어서 복원
-          console.warn("Mermaid div source empty, skipping");
-        }
-
-        mermaid
-          .run({ querySelector: ".mermaid" })
-          .then(function () {
-            enhanceMermaidDiagrams();
-          })
-          .catch(function (err) {
-            console.warn("mermaid.run() failed, retrying:", err);
-            if (attempt < maxAttempts) {
-              setTimeout(poll, 1000);
-            }
-          });
-      });
+      setTimeout(poll, 500);
     }
 
     setTimeout(poll, 1500);
