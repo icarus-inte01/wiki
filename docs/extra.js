@@ -244,40 +244,98 @@
     });
   }
 
-  // Mermaid 렌더링 완료를 기다리며 반복 시도
-  function waitForMermaid() {
-    var maxAttempts = 40;
-    var attempt = 0;
+  // --- 1. Material이 변환한 <div class="mermaid">에서 원본 소스 캡처 ---
+  // (Material의 Mermaid 로더는 async이므로 아직 소스가 살아있음)
+  var mermaidSources = [];
+  var mermaidDoms = document.querySelectorAll("div.mermaid");
+  mermaidDoms.forEach(function (div) {
+    mermaidSources.push({
+      id: div.id || "",
+      source: div.textContent || "",
+    });
+  });
 
-    function poll() {
-      attempt++;
-      enhanceMermaidDiagrams();
-
-      var allEnhanced = document.querySelectorAll(
-        ".mermaid:not(.mermaid-enhanced)"
-      ).length === 0;
-      if (allEnhanced || attempt >= maxAttempts) return;
-
-      setTimeout(poll, 500);
-    }
-
-    setTimeout(poll, 1500);
+  // <pre> 요소가 아직 남아있으면 그쪽에서도 수집
+  if (mermaidSources.length === 0) {
+    var preCodes = document.querySelectorAll("pre.mermaid code");
+    preCodes.forEach(function (code) {
+      mermaidSources.push({
+        id: "",
+        source: code.textContent || "",
+      });
+    });
   }
 
+  // --- 2. Mermaid 11.4.1 동적 로드 ---
+  function loadMermaid11(callback) {
+    if (
+      typeof mermaid !== "undefined" &&
+      mermaid.version &&
+      mermaid.version.indexOf("11.4") >= 0
+    ) {
+      callback();
+      return;
+    }
+
+    var script = document.createElement("script");
+    script.src =
+      "https://unpkg.com/mermaid@11.4.1/dist/mermaid.min.js";
+    script.onload = callback;
+    script.onerror = function () {
+      setTimeout(function () {
+        loadMermaid11(callback);
+      }, 2000);
+    };
+    document.head.appendChild(script);
+  }
+
+  // --- 3. 캡처한 소스로 <div class="mermaid"> 복원 후 렌더링 ---
+  function restoreAndRender() {
+    if (mermaidSources.length === 0) return;
+
+    // 빈 div/에러 div를 원본 소스로 복원
+    var divs = document.querySelectorAll("div.mermaid");
+    divs.forEach(function (div, i) {
+      var src = mermaidSources[i];
+      if (src && (!div.textContent.trim() || div.querySelector('[aria-roledescription="error"]'))) {
+        // 기존 내용 제거
+        div.innerHTML = "";
+        // 원본 소스 복원
+        div.textContent = src.source;
+      }
+    });
+
+    mermaid.initialize({ startOnLoad: false });
+    mermaid
+      .run({ querySelector: ".mermaid" })
+      .then(function () {
+        enhanceMermaidDiagrams();
+      })
+      .catch(function (err) {
+        console.warn("mermaid 11.4.1 run failed:", err);
+      });
+  }
+
+  // --- 4. 전체 초기화 ---
+  function initMermaid() {
+    loadMermaid11(function () {
+      restoreAndRender();
+    });
+  }
+
+  // DOMContentLoaded 이후 실행 (이미 지났으면 즉시)
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", waitForMermaid);
+    document.addEventListener("DOMContentLoaded", initMermaid);
   } else {
-    waitForMermaid();
+    // extra.js 실행 시점에 Material이 이미 DOM을 변환했지만
+    // 소스는 아직 div에 살아있음. 즉시 실행.
+    initMermaid();
   }
 
   // 테마 토글 등으로 Mermaid가 다시 그려질 때 재처리
   var observer = new MutationObserver(function () {
     var needsEnhance = document.querySelectorAll(
       ".mermaid:not(.mermaid-enhanced) svg"
-    ).length > 0;
-
-    var newMermaids = document.querySelectorAll(
-      ".mermaid:not(.mermaid-enhanced)"
     ).length > 0;
 
     if (needsEnhance) {
