@@ -277,14 +277,14 @@
 
       switch (btn.dataset.action) {
         case "zoom-in": {
-          var w = parseFloat(svg.getAttribute("width") || svg.viewBox.baseVal.width);
-          svg.style.width = w * 1.3 + "px";
+          var w = svg.getBoundingClientRect().width;
+          svg.style.width = w * ZOOM_STEP + "px";
           svg.style.maxWidth = "none";
           break;
         }
         case "zoom-out": {
-          var w2 = parseFloat(svg.style.width || svg.getAttribute("width") || svg.viewBox.baseVal.width);
-          svg.style.width = Math.max(w2 / 1.3, 200) + "px";
+          var w2 = svg.getBoundingClientRect().width;
+          svg.style.width = Math.max(w2 / ZOOM_STEP, 200) + "px";
           svg.style.maxWidth = "none";
           break;
         }
