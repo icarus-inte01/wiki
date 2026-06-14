@@ -83,6 +83,7 @@ extra_css:
   - extra.css
 
 extra_javascript:
+  - https://unpkg.com/mermaid@11.4.1/dist/mermaid.min.js
   - extra.js
 
 extra:
@@ -90,8 +91,5 @@ extra:
     - icon: fontawesome/brands/github
       link: https://github.com/icarus-inte01
   generator: false
-  mermaid:
-    theme: default
-    version: "11.4.1"
 
 copyright: CC BY-NC 4.0
