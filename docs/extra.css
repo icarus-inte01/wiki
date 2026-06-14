@@ -257,23 +257,29 @@
    slate 테마에서 invert(1) hue-rotate(180deg)로 색상을 반전시켜 가시성 확보. */
 [data-md-color-scheme="slate"] .mermaid-enhanced {
   /* 다크 배경에서 SVG 영역을 시각적으로 구분 */
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.04);
   border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 [data-md-color-scheme="slate"] .mermaid-enhanced svg {
-  filter: invert(1) hue-rotate(180deg) brightness(1.08);
+  filter: invert(1) hue-rotate(180deg) brightness(1.3) saturate(1.4);
 }
 
 [data-md-color-scheme="slate"] .mermaid-overlay-svg svg {
-  filter: invert(1) hue-rotate(180deg) brightness(1.08);
+  filter: invert(1) hue-rotate(180deg) brightness(1.3) saturate(1.4);
 }
 
-/* 다크모드에서 툴바 아이콘 가시성 향상 */
+/* 다크모드에서 툴바 시인성 확보 */
 [data-md-color-scheme="slate"] .mermaid-tb-btn {
-  color: rgba(255, 255, 255, 0.95);
+  color: #fff;
 }
 
 [data-md-color-scheme="slate"] .mermaid-tb-btn:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+[data-md-color-scheme="slate"] .mermaid-top-toolbar,
+[data-md-color-scheme="slate"] .mermaid-bottom-toolbar {
+  border-color: rgba(255, 255, 255, 0.25);
 }
