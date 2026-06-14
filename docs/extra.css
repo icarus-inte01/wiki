@@ -255,10 +255,25 @@
 /* ===== Mermaid 다이어그램 다크모드 대응 ===== */
 /* Mermaid SVG는 light 모드 색상(검정 선/글자, 흰 배경)으로 고정 렌더링됨.
    slate 테마에서 invert(1) hue-rotate(180deg)로 색상을 반전시켜 가시성 확보. */
+[data-md-color-scheme="slate"] .mermaid-enhanced {
+  /* 다크 배경에서 SVG 영역을 시각적으로 구분 */
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 4px;
+}
+
 [data-md-color-scheme="slate"] .mermaid-enhanced svg {
-  filter: invert(1) hue-rotate(180deg);
+  filter: invert(1) hue-rotate(180deg) brightness(1.08);
 }
 
 [data-md-color-scheme="slate"] .mermaid-overlay-svg svg {
-  filter: invert(1) hue-rotate(180deg);
+  filter: invert(1) hue-rotate(180deg) brightness(1.08);
+}
+
+/* 다크모드에서 툴바 아이콘 가시성 향상 */
+[data-md-color-scheme="slate"] .mermaid-tb-btn {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+[data-md-color-scheme="slate"] .mermaid-tb-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
 }
