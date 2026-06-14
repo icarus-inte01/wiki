@@ -5,8 +5,6 @@
 (function () {
   "use strict";
 
-  window.__mermaidDebug = { toolbarHtmlCalls: 0, errors: [] };
-
   var ZOOM_STEP = 1.3;
   var ZOOM_MIN = 0.2;
   var ZOOM_MAX = 5;
@@ -260,12 +258,6 @@
                 fullscreen: ICONS["fullscreen"],
               });
               wrapper.insertAdjacentHTML("beforeend", tbHtml);
-              // 디버그: insertAdjacentHTML 직후 확인
-              if (window.__mermaidDebug) {
-                window.__mermaidDebug.toolbarCount = (window.__mermaidDebug.toolbarCount || 0) + 1;
-                window.__mermaidDebug.toolbarHtmlLength = (tbHtml || "").length;
-                window.__mermaidDebug.insertOk = wrapper.querySelector(".mermaid-diagram-toolbar") !== null;
-              }
 
               // attach overlay events to the new wrapper
               attachToolbarEvents(wrapper);
@@ -286,7 +278,6 @@
 
   // --- 툴바 HTML 생성 ---
   function toolbarHtml(icons) {
-    window.__mermaidDebug.toolbarHtmlCalls++;
     var html = '<div class="mermaid-diagram-toolbar">' +
       '<button class="mermaid-tb-btn" data-action="zoom-in" title="확대">' + icons["zoom-in"] + '</button>' +
       '<button class="mermaid-tb-btn" data-action="zoom-out" title="축소">' + icons["zoom-out"] + '</button>' +
