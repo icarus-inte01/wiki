@@ -253,15 +253,6 @@
       attempt++;
       enhanceMermaidDiagrams();
 
-      // 아직 SVG가 없으면 mermaid.run() 시도
-      var svgCount = document.querySelectorAll(".mermaid svg").length;
-      if (svgCount === 0 && attempt === 2) {
-        var preMermaids = document.querySelectorAll("pre.mermaid");
-        if (preMermaids.length > 0 && typeof mermaid !== "undefined" && mermaid.run) {
-          try { mermaid.run(); } catch (e) { /* retry */ }
-        }
-      }
-
       var remaining = document.querySelectorAll(
         ".mermaid:not(.mermaid-enhanced)"
       ).length;
