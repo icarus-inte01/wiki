@@ -291,7 +291,7 @@
     fetchMermaidSources().then(function (sources) {
       if (!sources || sources.length === 0) return;
 
-      // 기존에 Material이 만든 빈 <div class="mermaid"> 제거
+      // Material이 만든 모든 기존 <div class="mermaid"> 제거 (빈 것 + 에러)
       document.querySelectorAll("div.mermaid").forEach(function (el) {
         el.remove();
       });
@@ -311,10 +311,21 @@
         mermaid
           .run({ querySelector: ".mermaid" })
           .then(function () {
-            enhanceMermaidDiagrams();
+            // 작은 지연 후 툴바 부착 (SVG가 실제로 DOM에 추가된 후에)
+            setTimeout(enhanceMermaidDiagrams, 50);
           })
           .catch(function (err) {
-            console.warn("mermaid 11.4.1 error:", err);
+            console.warn("mermaid 11.4.1 run error:", err);
+            // fallback: 각 div를 개별 렌더링
+            sources.forEach(function (source, i) {
+              var divs = document.querySelectorAll("div.mermaid");
+              if (divs[i]) {
+                mermaid.mermaidAPI.render("mermaid-svg-" + i, source, function (svg) {
+                  divs[i].innerHTML = svg;
+                  setTimeout(enhanceMermaidDiagrams, 50);
+                });
+              }
+            });
           });
       });
     });
