@@ -244,41 +244,23 @@
     });
   }
 
-  // Mermaid 렌더링이 아직 안 되었으면 직접 실행
-  function ensureMermaidRendered() {
-    var mermaidDivs = document.querySelectorAll(".mermaid");
-    var needsRender = false;
-    mermaidDivs.forEach(function (el) {
-      if (!el.querySelector("svg")) needsRender = true;
-    });
-    if (!needsRender) return true;
-
-    if (typeof mermaid !== "undefined" && mermaid.run) {
-      try {
-        mermaid.run({ querySelector: ".mermaid" });
-        return true;
-      } catch (e) {
-        console.warn("mermaid.run() failed:", e);
-        return false;
-      }
-    }
-    return false;
-  }
-
   // Mermaid 렌더링 완료를 기다리며 반복 시도
   function waitForMermaid() {
-    var maxAttempts = 20;
+    var maxAttempts = 30;
     var attempt = 0;
 
     function poll() {
       attempt++;
-
-      // 아직 SVG가 없으면 Mermaid 직접 초기화
-      if (attempt === 1) {
-        ensureMermaidRendered();
-      }
-
       enhanceMermaidDiagrams();
+
+      // 아직 SVG가 없으면 mermaid.run() 시도
+      var svgCount = document.querySelectorAll(".mermaid svg").length;
+      if (svgCount === 0 && attempt === 2) {
+        var preMermaids = document.querySelectorAll("pre.mermaid");
+        if (preMermaids.length > 0 && typeof mermaid !== "undefined" && mermaid.run) {
+          try { mermaid.run(); } catch (e) { /* retry */ }
+        }
+      }
 
       var remaining = document.querySelectorAll(
         ".mermaid:not(.mermaid-enhanced)"
@@ -288,8 +270,7 @@
       setTimeout(poll, 500);
     }
 
-    // 첫 폴링은 mermaid.js가 로드될 시간을 충분히 줌
-    setTimeout(poll, 1000);
+    setTimeout(poll, 1500);
   }
 
   if (document.readyState === "loading") {
@@ -300,20 +281,16 @@
 
   // 테마 토글 등으로 Mermaid가 다시 그려질 때 재처리
   var observer = new MutationObserver(function () {
-    var needsRender = document.querySelectorAll(
+    var needsEnhance = document.querySelectorAll(
       ".mermaid:not(.mermaid-enhanced) svg"
     ).length > 0;
 
-    var emptyMermaids = document.querySelectorAll(
+    var newMermaids = document.querySelectorAll(
       ".mermaid:not(.mermaid-enhanced)"
     ).length > 0;
 
-    if (emptyMermaids) {
-      ensureMermaidRendered();
-    }
-
-    if (needsRender || emptyMermaids) {
-      setTimeout(enhanceMermaidDiagrams, 500);
+    if (needsEnhance) {
+      enhanceMermaidDiagrams();
     }
   });
   observer.observe(document.body, { childList: true, subtree: true });
