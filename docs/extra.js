@@ -280,14 +280,14 @@
           var z = parseFloat(container.dataset.zoomLevel) || 1;
           container.dataset.zoomLevel = Math.min(z * ZOOM_STEP, ZOOM_MAX);
           svg.style.maxWidth = "none";
-          applyTransform(svg, container);
+          applyContainerTransform(svg, container);
           break;
         }
         case "zoom-out": {
           var z2 = parseFloat(container.dataset.zoomLevel) || 1;
           container.dataset.zoomLevel = Math.max(z2 / ZOOM_STEP, ZOOM_MIN);
           svg.style.maxWidth = "none";
-          applyTransform(svg, container);
+          applyContainerTransform(svg, container);
           break;
         }
         case "reset":
@@ -331,7 +331,7 @@
   }
 
   // --- SVG 변환 (줌 + 패닝 통합, 컨테이너별 독립 상태, 가운데 기준) ---
-  function applyTransform(svg, container) {
+  function applyContainerTransform(svg, container) {
     var zoom = parseFloat(container.dataset.zoomLevel) || 1;
     var px = parseInt(container.dataset.panX) || 0;
     var py = parseInt(container.dataset.panY) || 0;
@@ -352,7 +352,7 @@
     }
     container.dataset.panX = px;
     container.dataset.panY = py;
-    applyTransform(svg, container);
+    applyContainerTransform(svg, container);
   }
 
   // --- 초기화: 한 번만 실행 ---

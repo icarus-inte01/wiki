@@ -83,7 +83,7 @@ extra_css:
   - extra.css
 
 extra_javascript:
-  - extra.js?v=5
+  - extra.js?v=6
 
 extra:
   social:
