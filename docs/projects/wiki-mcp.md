@@ -2,7 +2,7 @@
 
 ## 개요
 
-Wiki MCP는 개인 위키(`~/doc/wiki/docs`)를 AI가 직접 검색/조회/편집할 수 있게 해주는 MCP 서버입니다. OpenCode의 MCP 클라이언트를 통해 9개의 도구를 제공하며, 파일 변경 시 `index.md`와 `mkdocs.yml` `nav`를 자동으로 동기화합니다.
+Wiki MCP는 개인 위키(`~/doc/wiki/docs`)를 AI가 직접 검색/조회/편집할 수 있게 해주는 MCP 서버입니다. OpenCode의 MCP 클라이언트를 통해 10개의 도구를 제공하며, 파일 변경 시 `index.md`와 `mkdocs.yml` `nav`를 자동으로 동기화합니다.
 
 ---
 
@@ -27,6 +27,7 @@ flowchart TB
         SERVER --> DELETE["wiki_delete"]
         SERVER --> MOVE["wiki_move"]
         SERVER --> MKDIR["wiki_create_dir"]
+        SERVER --> ADD["wiki_add"]
     end
 
     subgraph FS["파일 시스템"]
@@ -211,6 +212,38 @@ flowchart LR
 | **입력** | `path` (필수), `title` (필수, index.md의 `# ` 제목) |
 | **출력** | 디렉터리 + index.md 생성 확인 |
 
+### 10. wiki_add
+
+외부 마크다운 파일을 위키로 복사합니다.
+
+| 항목 | 설명 |
+|------|------|
+| **목적** | 로컬에 있는 `.md` 파일을 위키로 가져오기 |
+| **입력** | `source` (필수, 외부 파일 절대 경로), `path` (필수, 위키 내 대상 경로), `section` (선택) |
+| **출력** | 복사 확인 + index.md 등록 + mkdocs.yml nav 등록 결과 |
+| **특징** | `wiki_write`와 동일하게 index.md/nav 자동 동기화, 부모 디렉터리 없으면 `wiki_create_dir()` 사용 유도 |
+
+**동작 방식:**
+
+```mermaid
+flowchart LR
+    A["입력: source, path"] --> B["source 검증<br/>존재/파일/.md 확장자"]
+    B --> C["파일 내용 읽기"]
+    C --> D["경로 검증<br/>_resolve_wiki_path()"]
+    D --> E{"대상 존재?"}
+    E -->|예| F["오류: 이미 존재"]
+    E -->|아니오| G{"부모 디렉터리<br/>존재?"}
+    G -->|아니오| H["오류: wiki_create_dir() 사용"]
+    G -->|예| I["파일 쓰기"]
+    I --> J{"index.md 존재?"}
+    J -->|예| K["_add_to_index()"]
+    J -->|아니오| L["skip"]
+    I --> M{"mkdocs.yml 존재?"}
+    M -->|예| N["_add_to_nav()"]
+    M -->|아니오| O["skip"]
+    K & L & N & O --> P["완료 메시지 반환"]
+```
+
 ---
 
 ## 핵심 함수 (server.py)
@@ -267,19 +300,26 @@ AGENTS.md 규칙을 `_add_to_index()` / `_remove_from_index()`로 자동화:
 
 ```mermaid
 flowchart TD
-    W["wiki_write<br/>(파일 생성)"] --> ADD["_add_to_index()"]
-    U["wiki_update<br/>(제목 변경)"] --> RM["_remove_from_index()"]
+    W["wiki_write<br/>(파일 생성)"]
+    A["wiki_add<br/>(외부 파일 복사)"]
+    U["wiki_update<br/>(제목 변경)"]
+    D["wiki_delete"]
+    M["wiki_move"]
+
+    W --> ADD1["_add_to_index()"]
+    A --> ADD1
+    U --> RM["_remove_from_index()"]
     U --> ADD2["_add_to_index()"]
-    D["wiki_delete"] --> RM2["_remove_from_index()"]
-    M["wiki_move"] --> RM3["_remove_from_index() (source)"]
+    D --> RM2["_remove_from_index()"]
+    M --> RM3["_remove_from_index() (source)"]
     M --> ADD3["_add_to_index() (dest)"]
 
-    ADD -->|"섹션 찾기<br/>→ 해당 섹션에 추가<br/>→ 없으면 새 섹션"| DONE1["완료"]
-    RM -->|"항목 제거<br/>→ 빈 섹션 정리"| DONE2["완료"]
+    ADD1 & ADD2 & ADD3 -->|"섹션 찾기<br/>→ 해당 섹션에 추가<br/>→ 없으면 새 섹션"| DONE1["완료"]
+    RM & RM2 & RM3 -->|"항목 제거<br/>→ 빈 섹션 정리"| DONE2["완료"]
 ```
 
 **규칙 요약:**
-- 새 파일 생성 → 같은 디렉터리의 `index.md`에 항목 추가 + `mkdocs.yml` `nav`에 등록
+- 새 파일 생성/외부 파일 추가 → 같은 디렉터리의 `index.md`에 항목 추가 + `mkdocs.yml` `nav`에 등록
 - 제목 변경 → `index.md` + `mkdocs.yml` `nav` 제목 갱신
 - 파일 삭제 → `index.md`에서 항목 제거 + `mkdocs.yml` `nav`에서 제거; 빈 섹션도 함께 정리
 - 파일 이동 → 원본 `index.md`/`nav`에서 제거, 대상 `index.md`/`nav`에 추가
@@ -291,6 +331,8 @@ flowchart TD
 flowchart TD
     W["wiki_write"] --> AI["_add_to_index()"]
     W --> AN["_add_to_nav()"]
+    A["wiki_add"] --> AI
+    A --> AN
     U["wiki_update<br/>(제목 변경)"] --> RI["_remove_from_index()"]
     U --> RN["_update_nav_title()"]
     U --> AI2["_add_to_index()"]
@@ -394,9 +436,11 @@ pip install git+https://github.com/icarus-inte01/wiki-mcp.git
 
 2. **숨김 파일 제외**: `.`으로 시작하는 파일/디렉터리는 목록에서 제외
 
-3. **파일 중복 생성 방지**: `wiki_write`에서 기존 파일이 있으면 오류 반환
+3. **파일 중복 생성 방지**: `wiki_write`/`wiki_add`에서 기존 파일이 있으면 오류 반환
 
 4. **존재 확인**: 모든 쓰기/삭제/이동 도구에서 파일 존재 여부 사전 검증
+
+5. **외부 파일 검증**: `wiki_add`에서 source 파일 존재 여부, 파일 타입, `.md` 확장자 확인
 
 ---
 
