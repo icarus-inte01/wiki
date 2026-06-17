@@ -6,6 +6,8 @@
 
 - **[JSON vs Protobuf 비교 분석](json-protobuf.md)**
 
+- **[Agent 개념 정리 (opencode)](agent-concept.md)**
+
 ## 가이드
 
 - **[Mermaid 다이어그램 예제](mermaid-example.md)** — Mermaid 문법별 사용 예시 모음
@@ -26,4 +28,3 @@
 ## 삽질 기록
 
 - ...
-- **[Agent 개념 정리 (opencode)](agent-concept.md)**
