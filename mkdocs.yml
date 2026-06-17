@@ -41,6 +41,7 @@ nav:
     - MCP 개념: dev/mcp.md
     - JSON vs Protobuf 비교 분석: dev/json-protobuf.md
     - WiKi Update 내용 요약: dev/wiki-update.md
+    - Agent 개념 정리 (opencode): dev/agent-concept.md
     - Python:
       - Python venv: dev/python/venv.md
       - pip 패키지: dev/python/pip.md

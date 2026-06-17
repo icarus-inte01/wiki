@@ -26,3 +26,4 @@
 ## 삽질 기록
 
 - ...
+- **[Agent 개념 정리 (opencode)](agent-concept.md)**
