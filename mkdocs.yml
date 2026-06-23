@@ -48,6 +48,7 @@ nav:
   - 일상/메모:
     - life/index.md
     - 벤처투자 완벽 가이드 — 소득공제부터 플랫폼 선택까지: life/venture-guide.md
+    - 아파트 베란다 Private Network + IoT Smart Farm Feasibility Guide: life/smart-farm-guide.md
   - 프로젝트:
     - projects/index.md
     - 뉴스 수집 및 요약 시스템: projects/design-news.md
