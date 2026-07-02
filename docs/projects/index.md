@@ -1,5 +1,8 @@
 # 프로젝트
 
+---
+# 프로젝트
+
 ## 진행 중
 
 - **[Wiki MCP Server](wiki-mcp.md)** — 개인 마크다운 위키용 MCP 서버
@@ -16,6 +19,11 @@
 
     Groq / Gemini / Zen 3개 Provider, 교차 피드 스코어링으로 중요 기사 선별
     GitHub: [icarus-inte01/sandbox](https://github.com/icarus-inte01/sandbox) (`news/`)
+
+- **[분양정보 유망도 추천 시스템](design-housing.md)** — 공공데이터 API 기반 아파트 분양 및 공매 대지 유망도 분석 리포트 자동화
+
+    청약홈/국토부/LH/온비드/vworld 5개 API 연동, 5항목 가중치 점수, HTML 이메일 발송
+    GitHub: [icarus-inte01/sandbox](https://github.com/icarus-inte01/sandbox) (`housing/`)
 
 ## 완료
 
